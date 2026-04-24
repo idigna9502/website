@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edit Sponsor · Admin · İDİGNA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{--navy:#05101e;--deep:#081828;--cyan:#22d3ee;--muted:#7a9bb5;--card:#0b1f30;--border:rgba(34,211,238,0.15);--gold:#f0c040;}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--navy);color:#e2eaf4;font-family:'Outfit',sans-serif}
+    header{position:sticky;top:0;background:rgba(5,16,30,0.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;z-index:10}
+    header .brand{font-family:'Cinzel',serif;letter-spacing:0.08em;color:var(--cyan);font-weight:900;text-decoration:none}
+    header a{color:var(--muted);text-decoration:none;margin-left:1rem}
+    main{max-width:900px;margin:0 auto;padding:2rem 1.5rem}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.2rem}
+    h1{margin:0 0 0.8rem;font-family:'Cinzel',serif;color:#fff;font-size:1.4rem}
+    .meta{color:var(--muted);margin:0 0 1.2rem}
+    code{color:var(--cyan)}
+    .pill{display:inline-block;padding:0.2rem 0.55rem;border:1px solid var(--border);border-radius:999px;font-size:0.75rem;color:var(--gold)}
+    label{display:block;color:var(--muted);font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;margin:0.9rem 0 0.35rem}
+    input,textarea{width:100%;padding:0.75rem 0.85rem;border-radius:8px;border:1px solid var(--border);background:rgba(8,24,40,0.7);color:#e2eaf4;outline:none}
+    textarea{min-height:140px;resize:vertical}
+    input:focus,textarea:focus{border-color:rgba(34,211,238,0.45)}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    @media(max-width:720px){.row{grid-template-columns:1fr}}
+    .btn{display:inline-block;border:1px solid var(--border);color:var(--cyan);text-decoration:none;padding:0.55rem 0.85rem;border-radius:8px;font-size:0.9rem;background:transparent;cursor:pointer}
+    .btn:hover{background:rgba(34,211,238,0.08)}
+    .btn-danger{border-color:rgba(255,180,180,0.25);color:#ffb4b4}
+    .btn-danger:hover{background:rgba(255,0,0,0.08)}
+    .hint{font-size:0.85rem;color:var(--muted);margin-top:0.5rem;line-height:1.6}
+  </style>
+</head>
+<body>
+  <header>
+    <a class="brand" href="{{ url_for('admin_panel') }}">İDİGNA · Admin</a>
+    <div>
+      <a href="{{ url_for('admin_sponsors') }}">Sponsors</a>
+      <a href="{{ url_for('admin_updates') }}">Updates</a>
+      <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="card">
+      <h1>Edit sponsor</h1>
+      <p class="meta">
+        ID: <code>{{ sponsor["id"] }}</code>
+        · Plain password: <code>{{ sponsor["plain_password"] }}</code>
+        {% if sponsor["type"] %} · <span class="pill">{{ sponsor["type"] }}</span>{% endif %}
+      </p>
+
+      <form method="post" action="{{ url_for('admin_edit_sponsor', sponsor_id=sponsor['id']) }}" enctype="multipart/form-data">
+        <div class="row">
+          <div>
+            <label for="name">Name</label>
+            <input id="name" name="name" value="{{ sponsor['name'] }}" required />
+          </div>
+          <div>
+            <label for="type">Type</label>
+            <input id="type" name="type" value="{{ sponsor['type'] or '' }}" placeholder="Malzeme Desteği" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="color">Color</label>
+            <input id="color" name="color" type="color" value="{{ sponsor['color'] }}" />
+          </div>
+          <div>
+            <label for="logo">Logo (replace)</label>
+            <input id="logo" name="logo" type="file" accept=".png,.jpg,.jpeg,.gif" />
+            <div class="hint">Current: <code>{{ sponsor["logo"] or "—" }}</code></div>
+          </div>
+        </div>
+
+        <label for="message">Message</label>
+        <textarea id="message" name="message">{{ sponsor["message"] or "" }}</textarea>
+
+        <div style="margin-top:1.2rem;display:flex;gap:0.75rem;flex-wrap:wrap">
+          <button class="btn" type="submit">Save</button>
+          <a class="btn" href="{{ url_for('admin_sponsors') }}">Back</a>
+          <form method="post" action="{{ url_for('admin_delete_sponsor', sponsor_id=sponsor['id']) }}" onsubmit="return confirm('Delete sponsor?');">
+            <button class="btn btn-danger" type="submit">Delete</button>
+          </form>
+        </div>
+      </form>
+    </section>
+  </main>
+</body>
+</html>

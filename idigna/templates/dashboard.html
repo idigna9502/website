@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ sponsor["name"] }} · Sponsor Portal · İDİGNA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --navy:#05101e;
+      --deep:#081828;
+      --cyan:#22d3ee;
+      --text:#e2eaf4;
+      --muted:#7a9bb5;
+      --card:#0b1f30;
+      --border:rgba(34,211,238,0.15);
+      --gold:#f0c040;
+    }
+    body{background:var(--navy);color:var(--text);font-family:'Outfit',sans-serif;overflow-x:hidden}
+    header{
+      position:sticky;top:0;z-index:10;
+      background:linear-gradient(90deg, rgba(5,16,30,0.85), rgba(5,16,30,0.65));
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--border);
+      padding:1.2rem 1.8rem;
+    }
+    .header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+    .brand{font-family:'Cinzel',serif;font-weight:900;letter-spacing:0.08em;color:#fff;text-decoration:none}
+    .brand span{color:var(--cyan)}
+    .logout{border:1px solid var(--border);color:var(--cyan);text-decoration:none;padding:0.55rem 0.9rem;border-radius:8px}
+    .logout:hover{background:rgba(34,211,238,0.08)}
+    .hero{
+      position:relative;
+      padding:2.8rem 1.8rem 1.8rem;
+      background:linear-gradient(180deg, rgba(8,24,40,0.9), rgba(5,16,30,0));
+    }
+    .accentbar{
+      position:absolute;inset:0;
+      background:radial-gradient(ellipse 60% 50% at 20% 20%, {{ sponsor["color"] }}33 0%, transparent 65%),
+                 radial-gradient(ellipse 60% 50% at 80% 10%, {{ sponsor["color"] }}22 0%, transparent 60%);
+      pointer-events:none;
+    }
+    .hero-inner{position:relative;max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 320px;gap:1.6rem;align-items:start}
+    @media(max-width:900px){.hero-inner{grid-template-columns:1fr}}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.4rem}
+    h1{font-family:'Cinzel',serif;font-size:2rem;letter-spacing:0.04em;color:#fff}
+    .badge{display:inline-block;margin-top:0.7rem;border:1px solid var(--border);border-radius:999px;padding:0.25rem 0.65rem;font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold)}
+    .msg{margin-top:1rem;color:var(--muted);line-height:1.8}
+    .logo{width:100%;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center}
+    .logo img{max-width:100%;max-height:100%;object-fit:contain;filter:drop-shadow(0 0 25px rgba(34,211,238,0.12))}
+    main{max-width:1100px;margin:0 auto;padding:1.6rem 1.8rem 3.5rem}
+    .section-title{font-family:'Cinzel',serif;color:#fff;font-size:1.35rem;letter-spacing:0.04em;margin-bottom:0.9rem}
+    .update{background:rgba(8,24,40,0.45);border:1px solid var(--border);border-radius:12px;padding:1.2rem;margin-top:0.9rem}
+    .uhead{display:flex;justify-content:space-between;gap:1rem;align-items:baseline}
+    .utitle{font-weight:600;color:#fff}
+    .udate{color:var(--muted);font-size:0.85rem}
+    .ubody{margin-top:0.6rem;color:#cfe2f6;opacity:0.95;white-space:pre-wrap;line-height:1.75}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <a class="brand" href="{{ url_for('index') }}">İD<span>İ</span>GNA · Sponsor</a>
+      <a class="logout" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="accentbar"></div>
+    <div class="hero-inner">
+      <div class="card">
+        <h1>{{ sponsor["name"] }}</h1>
+        {% if sponsor["type"] %}
+          <div class="badge">{{ sponsor["type"] }}</div>
+        {% endif %}
+        {% if sponsor["message"] %}
+          <p class="msg">{{ sponsor["message"] }}</p>
+        {% else %}
+          <p class="msg">Thank you for supporting FRC Team 9502 İDİGNA.</p>
+        {% endif %}
+      </div>
+      <div class="card">
+        <div class="logo">
+          {% if sponsor["logo"] %}
+            <img alt="Sponsor logo" src="{{ url_for('static', filename='uploads/logos/' ~ sponsor['logo']) }}">
+          {% else %}
+            <div style="text-align:center;color:var(--muted);line-height:1.6">
+              <div style="font-family:'Cinzel',serif;color:var(--cyan);letter-spacing:0.08em">LOGO</div>
+              <div style="font-size:0.85rem;margin-top:0.4rem">Not provided</div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <div class="section-title">Weekly Updates</div>
+    {% if updates|length == 0 %}
+      <div class="update">
+        <div class="utitle">No updates yet</div>
+        <div class="ubody">Admins can post weekly updates in the admin panel.</div>
+      </div>
+    {% else %}
+      {% for u in updates %}
+        <article class="update">
+          <div class="uhead">
+            <div class="utitle">{{ u["title"] }}</div>
+            <div class="udate">{{ u["date"] }}</div>
+          </div>
+          <div class="ubody">{{ u["body"] }}</div>
+        </article>
+      {% endfor %}
+    {% endif %}
+  </main>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel · İDİGNA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{--navy:#05101e;--deep:#081828;--cyan:#22d3ee;--muted:#7a9bb5;--card:#0b1f30;--border:rgba(34,211,238,0.15);}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--navy);color:#e2eaf4;font-family:'Outfit',sans-serif;min-height:100vh}
+    header{position:sticky;top:0;background:rgba(5,16,30,0.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
+    header .brand{font-family:'Cinzel',serif;letter-spacing:0.08em;color:var(--cyan);font-weight:900;text-decoration:none}
+    header a{color:var(--muted);text-decoration:none;margin-left:1rem}
+    main{max-width:1100px;margin:0 auto;padding:2rem 1.5rem}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.2rem}
+    .label{color:var(--muted);font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase}
+    .num{font-family:'Cinzel',serif;font-size:2rem;color:#fff;margin-top:0.5rem}
+    .links{margin-top:1.4rem;display:flex;gap:0.75rem;flex-wrap:wrap}
+    .btn{display:inline-block;border:1px solid var(--border);color:var(--cyan);text-decoration:none;padding:0.6rem 0.9rem;border-radius:8px}
+    .btn:hover{background:rgba(34,211,238,0.08)}
+    .notice{margin-top:1rem;background:rgba(34,211,238,0.06);border:1px solid rgba(34,211,238,0.18);padding:0.9rem 1rem;border-radius:10px}
+    code{color:var(--cyan)}
+  </style>
+</head>
+<body>
+  <header>
+    <a class="brand" href="{{ url_for('admin_panel') }}">İDİGNA · Admin</a>
+    <div>
+      <a href="{{ url_for('index') }}">Site</a>
+      <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="grid">
+      <div class="card">
+        <div class="label">Sponsors</div>
+        <div class="num">{{ sponsor_count }}</div>
+        <div class="links">
+          <a class="btn" href="{{ url_for('admin_sponsors') }}">Manage sponsors</a>
+        </div>
+      </div>
+      <div class="card">
+        <div class="label">Weekly updates</div>
+        <div class="num">{{ update_count }}</div>
+        <div class="links">
+          <a class="btn" href="{{ url_for('admin_updates') }}">Manage updates</a>
+        </div>
+      </div>
+    </div>
+
+    {% if created_password and created_id %}
+      <div class="notice">
+        Created sponsor <code>{{ created_id }}</code> password: <code>{{ created_password }}</code>
+      </div>
+    {% endif %}
+  </main>
+</body>
+</html>

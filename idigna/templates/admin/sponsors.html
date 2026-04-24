@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sponsors · Admin · İDİGNA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{--navy:#05101e;--deep:#081828;--cyan:#22d3ee;--muted:#7a9bb5;--card:#0b1f30;--border:rgba(34,211,238,0.15);--gold:#f0c040;}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--navy);color:#e2eaf4;font-family:'Outfit',sans-serif}
+    header{position:sticky;top:0;background:rgba(5,16,30,0.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;z-index:10}
+    header .brand{font-family:'Cinzel',serif;letter-spacing:0.08em;color:var(--cyan);font-weight:900;text-decoration:none}
+    header a{color:var(--muted);text-decoration:none;margin-left:1rem}
+    main{max-width:1200px;margin:0 auto;padding:2rem 1.5rem;display:grid;grid-template-columns:1.4fr 0.9fr;gap:1.25rem}
+    @media(max-width:960px){main{grid-template-columns:1fr}}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.2rem}
+    h1{margin:0 0 1rem;font-family:'Cinzel',serif;color:#fff;font-size:1.4rem}
+    .muted{color:var(--muted)}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:0.75rem 0.6rem;border-bottom:1px solid rgba(34,211,238,0.10);vertical-align:top}
+    th{color:var(--muted);font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;text-align:left}
+    .pill{display:inline-block;padding:0.2rem 0.5rem;border:1px solid var(--border);border-radius:999px;font-size:0.75rem;color:var(--gold)}
+    .colorbox{display:inline-block;width:14px;height:14px;border-radius:4px;border:1px solid rgba(255,255,255,0.15);vertical-align:middle;margin-right:0.35rem}
+    .btn{display:inline-block;border:1px solid var(--border);color:var(--cyan);text-decoration:none;padding:0.45rem 0.7rem;border-radius:8px;font-size:0.85rem;background:transparent;cursor:pointer}
+    .btn:hover{background:rgba(34,211,238,0.08)}
+    .btn-danger{border-color:rgba(255,180,180,0.25);color:#ffb4b4}
+    .btn-danger:hover{background:rgba(255,0,0,0.08)}
+    form.inline{display:inline}
+    label{display:block;color:var(--muted);font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;margin:0.9rem 0 0.35rem}
+    input,textarea{width:100%;padding:0.75rem 0.85rem;border-radius:8px;border:1px solid var(--border);background:rgba(8,24,40,0.7);color:#e2eaf4;outline:none}
+    textarea{min-height:120px;resize:vertical}
+    input:focus,textarea:focus{border-color:rgba(34,211,238,0.45)}
+    .err{margin-top:1rem;color:#ffb4b4;background:rgba(255,0,0,0.08);border:1px solid rgba(255,180,180,0.25);padding:0.75rem 0.9rem;border-radius:8px}
+    .hint{font-size:0.85rem;color:var(--muted);margin-top:0.5rem;line-height:1.6}
+    code{color:var(--cyan)}
+  </style>
+</head>
+<body>
+  <header>
+    <a class="brand" href="{{ url_for('admin_panel') }}">İDİGNA · Admin</a>
+    <div>
+      <a href="{{ url_for('admin_panel') }}">Overview</a>
+      <a href="{{ url_for('admin_updates') }}">Updates</a>
+      <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="card">
+      <h1>Sponsors</h1>
+      <p class="muted">Plain passwords are always visible to admin by spec.</p>
+      <div style="overflow:auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>ID</th>
+              <th>Plain password</th>
+              <th>Type</th>
+              <th>Color</th>
+              <th>Logo</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for s in sponsors %}
+              <tr>
+                <td>{{ s["name"] }}</td>
+                <td><code>{{ s["id"] }}</code></td>
+                <td><code>{{ s["plain_password"] }}</code></td>
+                <td>{% if s["type"] %}<span class="pill">{{ s["type"] }}</span>{% else %}<span class="muted">—</span>{% endif %}</td>
+                <td><span class="colorbox" style="background: {{ s['color'] }}"></span><code>{{ s["color"] }}</code></td>
+                <td>{% if s["logo"] %}<span class="muted">{{ s["logo"] }}</span>{% else %}<span class="muted">—</span>{% endif %}</td>
+                <td>
+                  <a class="btn" href="{{ url_for('admin_edit_sponsor', sponsor_id=s['id']) }}">Edit</a>
+                  <form class="inline" method="post" action="{{ url_for('admin_delete_sponsor', sponsor_id=s['id']) }}" onsubmit="return confirm('Delete sponsor?');">
+                    <button class="btn btn-danger" type="submit">Delete</button>
+                  </form>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <aside class="card">
+      <h1>Add sponsor</h1>
+      <p class="hint">Password is auto-generated on create and shown on the overview page.</p>
+      <form method="post" action="{{ url_for('admin_sponsors') }}" enctype="multipart/form-data">
+        <label for="name">Name</label>
+        <input id="name" name="name" required />
+
+        <label for="type">Type</label>
+        <input id="type" name="type" placeholder="Malzeme Desteği" />
+
+        <label for="color">Color</label>
+        <input id="color" name="color" type="color" value="#22d3ee" />
+
+        <label for="logo">Logo (png/jpg/jpeg/gif)</label>
+        <input id="logo" name="logo" type="file" accept=".png,.jpg,.jpeg,.gif" />
+
+        <label for="message">Message</label>
+        <textarea id="message" name="message" placeholder="Special thanks message..."></textarea>
+
+        <div style="margin-top:1.2rem">
+          <button class="btn" type="submit">Create sponsor</button>
+        </div>
+
+        {% if error %}
+          <div class="err">{{ error }}</div>
+        {% endif %}
+      </form>
+    </aside>
+  </main>
+</body>
+</html>

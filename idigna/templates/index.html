@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>İDİGNA | FRC Takım 9502</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#05101e;
+  --deep:#081828;
+  --teal:#0e7490;
+  --cyan:#22d3ee;
+  --wave:#38bdf8;
+  --gold:#f0c040;
+  --text:#e2eaf4;
+  --muted:#7a9bb5;
+  --card:#0b1f30;
+  --border:rgba(34,211,238,0.15);
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--navy);
+  color:var(--text);
+  font-family:'Outfit',sans-serif;
+  font-weight:400;
+  overflow-x:hidden;
+}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--navy)}
+::-webkit-scrollbar-thumb{background:var(--teal);border-radius:3px}
+
+/* ─── NOISE OVERLAY ─── */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:0.4;
+}
+
+/* ─── NAV ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 2.5rem;
+  background:rgba(5,16,30,0.85);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  z-index:1000;
+}
+.nav-logo{
+  font-family:'Cinzel',serif;
+  font-weight:900;font-size:1.3rem;
+  color:var(--cyan);
+  letter-spacing:0.1em;
+  text-decoration:none;
+}
+.nav-logo span{color:var(--muted);font-size:0.75rem;margin-left:0.5rem;font-family:'Outfit',sans-serif;font-weight:300;vertical-align:middle}
+.nav-links{
+  display:flex;gap:2rem;align-items:center;
+  list-style:none;
+}
+.nav-links a{
+  color:var(--muted);text-decoration:none;
+  font-size:0.85rem;letter-spacing:0.05em;
+  transition:color 0.2s;
+}
+.nav-links a:hover{color:var(--cyan)}
+.lang-btn{
+  background:none;border:1px solid var(--border);
+  color:var(--cyan);padding:0.3rem 0.8rem;
+  border-radius:4px;cursor:pointer;
+  font-family:'Outfit',sans-serif;font-size:0.8rem;
+  letter-spacing:0.08em;transition:all 0.2s;
+}
+.lang-btn:hover{background:var(--cyan);color:var(--navy)}
+
+/* ─── HERO ─── */
+#hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+  padding:6rem 2rem 4rem;
+  text-align:center;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 80%, rgba(14,116,144,0.25) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 20% 20%, rgba(8,24,40,0.8) 0%, transparent 60%),
+    linear-gradient(180deg, var(--navy) 0%, var(--deep) 100%);
+}
+/* wave lines */
+.waves{position:absolute;bottom:0;left:0;right:0;height:300px;overflow:hidden}
+.waves svg{width:100%;height:100%}
+.hero-badge{
+  position:relative;
+  display:inline-block;
+  border:1px solid var(--border);
+  border-radius:100px;
+  padding:0.3rem 1rem;
+  font-size:0.75rem;
+  letter-spacing:0.15em;
+  color:var(--cyan);
+  margin-bottom:1.5rem;
+  background:rgba(14,116,144,0.1);
+}
+.hero-title{
+  position:relative;
+  font-family:'Cinzel',serif;
+  font-weight:900;
+  font-size:clamp(3.5rem,10vw,7rem);
+  line-height:1;
+  letter-spacing:0.05em;
+  color:#fff;
+  text-shadow:0 0 60px rgba(34,211,238,0.3);
+  margin-bottom:0.3rem;
+}
+.hero-title .accent{color:var(--cyan)}
+.hero-number{
+  font-family:'Outfit',sans-serif;
+  font-weight:300;
+  font-size:clamp(1rem,3vw,1.4rem);
+  color:var(--muted);
+  letter-spacing:0.4em;
+  margin-bottom:2rem;
+}
+.hero-tagline{
+  position:relative;
+  font-size:clamp(0.9rem,2vw,1.1rem);
+  color:var(--wave);
+  font-weight:300;
+  font-style:italic;
+  max-width:600px;
+  margin:0 auto 3rem;
+  opacity:0.85;
+}
+.hero-cta{
+  position:relative;
+  display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;
+}
+.btn-primary{
+  background:var(--cyan);color:var(--navy);
+  border:none;padding:0.8rem 2rem;
+  font-family:'Outfit',sans-serif;font-weight:600;
+  font-size:0.9rem;letter-spacing:0.05em;
+  border-radius:4px;cursor:pointer;
+  text-decoration:none;
+  transition:all 0.2s;
+}
+.btn-primary:hover{background:var(--wave);transform:translateY(-2px)}
+.btn-secondary{
+  background:transparent;color:var(--cyan);
+  border:1px solid var(--cyan);padding:0.8rem 2rem;
+  font-family:'Outfit',sans-serif;font-weight:500;
+  font-size:0.9rem;letter-spacing:0.05em;
+  border-radius:4px;cursor:pointer;
+  text-decoration:none;
+  transition:all 0.2s;
+}
+.btn-secondary:hover{background:rgba(34,211,238,0.1);transform:translateY(-2px)}
+
+/* ─── STATS BAR ─── */
+.stats-bar{
+  display:flex;justify-content:center;flex-wrap:wrap;gap:0;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  background:rgba(8,24,40,0.6);
+  backdrop-filter:blur(8px);
+}
+.stat-item{
+  flex:1;min-width:150px;
+  padding:1.8rem 1rem;
+  text-align:center;
+  border-right:1px solid var(--border);
+}
+.stat-item:last-child{border-right:none}
+.stat-num{
+  font-family:'Cinzel',serif;
+  font-size:2rem;font-weight:700;
+  color:var(--cyan);
+  display:block;
+}
+.stat-label{
+  font-size:0.75rem;letter-spacing:0.1em;
+  color:var(--muted);margin-top:0.3rem;
+  text-transform:uppercase;
+}
+
+/* ─── SECTIONS ─── */
+section{position:relative;padding:6rem 2rem}
+.section-inner{max-width:1100px;margin:0 auto}
+.section-tag{
+  display:inline-block;
+  font-size:0.7rem;letter-spacing:0.2em;
+  color:var(--cyan);text-transform:uppercase;
+  margin-bottom:0.8rem;
+  padding-bottom:0.5rem;
+  border-bottom:1px solid var(--border);
+}
+.section-title{
+  font-family:'Cinzel',serif;
+  font-weight:700;
+  font-size:clamp(1.8rem,4vw,2.8rem);
+  color:#fff;
+  margin-bottom:1.5rem;
+  line-height:1.2;
+}
+.section-body{
+  color:var(--muted);
+  font-size:1rem;line-height:1.8;
+  max-width:680px;
+}
+.alt-bg{background:var(--deep)}
+
+/* ─── ABOUT GRID ─── */
+.about-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:3rem;align-items:center;
+}
+@media(max-width:768px){.about-grid{grid-template-columns:1fr}}
+.about-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:8px;padding:2rem;
+}
+.about-card h3{
+  font-family:'Cinzel',serif;font-size:1rem;
+  color:var(--cyan);margin-bottom:1rem;
+  letter-spacing:0.1em;
+}
+.about-card p{color:var(--muted);line-height:1.8;font-size:0.95rem}
+
+/* ─── ORIGIN ─── */
+.origin-layout{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:4rem;align-items:center;
+}
+@media(max-width:768px){.origin-layout{grid-template-columns:1fr}}
+.origin-quote{
+  font-family:'Cinzel',serif;
+  font-size:clamp(1.1rem,2.5vw,1.5rem);
+  color:var(--cyan);
+  border-left:3px solid var(--cyan);
+  padding-left:1.5rem;
+  font-style:italic;
+  line-height:1.6;
+  margin-top:2rem;
+}
+.river-names{
+  display:flex;flex-direction:column;gap:0.8rem;margin-top:2rem;
+}
+.river-row{
+  display:flex;align-items:center;gap:1rem;
+  padding:0.8rem 1rem;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:6px;
+}
+.river-civ{font-size:0.7rem;letter-spacing:0.15em;color:var(--cyan);min-width:70px;text-transform:uppercase}
+.river-name{font-family:'Cinzel',serif;font-size:1rem;color:#fff}
+
+/* ─── ROBOT ─── */
+.robot-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:3rem;align-items:start;
+}
+@media(max-width:768px){.robot-grid{grid-template-columns:1fr}}
+.robot-specs{display:flex;flex-direction:column;gap:1rem;margin-top:1.5rem}
+.spec-row{
+  display:flex;align-items:flex-start;gap:1rem;
+  padding:1rem;background:var(--card);
+  border:1px solid var(--border);border-radius:6px;
+}
+.spec-icon{font-size:1.4rem;flex-shrink:0}
+.spec-text h4{font-size:0.8rem;letter-spacing:0.1em;color:var(--cyan);margin-bottom:0.3rem;text-transform:uppercase}
+.spec-text p{font-size:0.88rem;color:var(--muted);line-height:1.5}
+
+/* ─── OUTREACH CARDS ─── */
+.outreach-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:1.5rem;
+  margin-top:2.5rem;
+}
+.outreach-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:1.8rem;
+  transition:border-color 0.2s, transform 0.2s;
+  position:relative;overflow:hidden;
+}
+.outreach-card::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg, var(--teal), var(--cyan));
+  transform:scaleX(0);transform-origin:left;
+  transition:transform 0.3s;
+}
+.outreach-card:hover::before{transform:scaleX(1)}
+.outreach-card:hover{border-color:rgba(34,211,238,0.35);transform:translateY(-4px)}
+.outreach-icon{font-size:2rem;margin-bottom:1rem}
+.outreach-card h3{
+  font-family:'Cinzel',serif;font-size:0.95rem;
+  color:#fff;margin-bottom:0.8rem;letter-spacing:0.05em;
+}
+.outreach-card p{font-size:0.88rem;color:var(--muted);line-height:1.6}
+.outreach-num{
+  display:inline-block;margin-top:1rem;
+  font-family:'Cinzel',serif;font-size:1.4rem;
+  color:var(--cyan);
+}
+.outreach-num-label{font-size:0.75rem;color:var(--muted);margin-left:0.4rem}
+
+/* ─── TEAM ─── */
+.team-structure{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:1.2rem;margin-top:2rem;
+}
+.team-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:8px;padding:1.4rem;
+}
+.team-card-role{
+  font-size:0.7rem;letter-spacing:0.15em;color:var(--cyan);
+  text-transform:uppercase;margin-bottom:0.8rem;
+}
+.team-card-names{color:var(--text);font-size:0.88rem;line-height:1.7}
+
+/* ─── SPONSORS ─── */
+.sponsors-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:1.5rem;margin-top:2.5rem;
+}
+.sponsor-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:8px;padding:2rem;
+  text-align:center;
+  transition:border-color 0.2s;
+}
+.sponsor-card:hover{border-color:rgba(240,192,64,0.4)}
+.sponsor-name{
+  font-family:'Cinzel',serif;font-size:1rem;
+  color:#fff;margin-bottom:0.5rem;
+}
+.sponsor-type{
+  font-size:0.8rem;color:var(--gold);
+  letter-spacing:0.1em;text-transform:uppercase;
+}
+.sponsor-cta{
+  display:block;margin-top:3rem;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:8px;padding:2.5rem;text-align:center;
+}
+.sponsor-cta h3{
+  font-family:'Cinzel',serif;font-size:1.3rem;
+  color:var(--cyan);margin-bottom:0.8rem;
+}
+.sponsor-cta p{color:var(--muted);font-size:0.95rem;max-width:500px;margin:0 auto 1.5rem}
+
+/* ─── CONTACT ─── */
+.contact-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:2rem;margin-top:2rem;
+}
+@media(max-width:640px){.contact-grid{grid-template-columns:1fr}}
+.contact-item{
+  display:flex;gap:1rem;align-items:flex-start;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:8px;padding:1.4rem;
+}
+.contact-icon{font-size:1.3rem;flex-shrink:0}
+.contact-label{font-size:0.7rem;letter-spacing:0.15em;color:var(--cyan);text-transform:uppercase;margin-bottom:0.3rem}
+.contact-value{color:var(--text);font-size:0.9rem}
+.contact-value a{color:var(--text);text-decoration:none}
+.contact-value a:hover{color:var(--cyan)}
+
+/* ─── FOOTER ─── */
+footer{
+  text-align:center;padding:2rem;
+  border-top:1px solid var(--border);
+  color:var(--muted);font-size:0.8rem;
+  letter-spacing:0.05em;
+}
+footer span{color:var(--cyan)}
+
+/* ─── ANIMATIONS ─── */
+.fade-up{
+  opacity:0;transform:translateY(30px);
+  transition:opacity 0.6s ease, transform 0.6s ease;
+}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+
+/* ─── MOBILE NAV ─── */
+.nav-toggle{display:none;background:none;border:none;color:var(--cyan);font-size:1.4rem;cursor:pointer}
+@media(max-width:768px){
+  .nav-links{display:none;position:fixed;inset:0;top:64px;background:var(--navy);flex-direction:column;align-items:center;justify-content:center;gap:2rem;z-index:999}
+  .nav-links.open{display:flex}
+  .nav-toggle{display:block}
+  .stats-bar{flex-direction:column}
+  .stat-item{border-right:none;border-bottom:1px solid var(--border)}
+  .stat-item:last-child{border-bottom:none}
+}
+
+/* ─── SPONSOR PORTAL BUTTON + MODAL (injected) ─── */
+.sponsor-portal-btn{
+  position:fixed;right:18px;bottom:18px;z-index:1200;
+  background:rgba(8,24,40,0.82);
+  border:1px solid var(--border);
+  color:var(--cyan);
+  padding:0.75rem 1rem;
+  border-radius:10px;
+  cursor:pointer;
+  font-family:'Outfit',sans-serif;
+  font-size:0.9rem;
+  letter-spacing:0.04em;
+  backdrop-filter:blur(10px);
+  box-shadow:0 0 40px rgba(34,211,238,0.08);
+}
+.sponsor-portal-btn:hover{background:rgba(34,211,238,0.08)}
+.portal-backdrop{
+  position:fixed;inset:0;z-index:1300;
+  background:rgba(0,0,0,0.55);
+  display:none;align-items:center;justify-content:center;
+  padding:1.5rem;
+}
+.portal-backdrop.open{display:flex}
+.portal-modal{
+  width:100%;max-width:460px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:1.4rem 1.4rem 1.2rem;
+}
+.portal-title{
+  font-family:'Cinzel',serif;
+  font-size:1.25rem;color:#fff;
+  letter-spacing:0.06em;
+}
+.portal-sub{margin-top:0.5rem;color:var(--muted);line-height:1.7;font-size:0.95rem}
+.portal-close{
+  position:absolute;
+}
+.portal-field{margin-top:1.1rem}
+.portal-label{
+  display:block;color:var(--muted);
+  font-size:0.75rem;letter-spacing:0.12em;
+  text-transform:uppercase;margin-bottom:0.35rem;
+}
+.portal-input{
+  width:100%;
+  padding:0.85rem 0.9rem;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:rgba(8,24,40,0.7);
+  color:var(--text);
+  outline:none;
+}
+.portal-input:focus{border-color:rgba(34,211,238,0.45)}
+.portal-actions{display:flex;gap:0.75rem;justify-content:flex-end;margin-top:1.1rem;flex-wrap:wrap}
+.portal-btn{
+  border:1px solid var(--border);
+  background:transparent;color:var(--cyan);
+  padding:0.65rem 0.9rem;border-radius:10px;
+  cursor:pointer;font-family:'Outfit',sans-serif;font-weight:600;
+}
+.portal-btn.primary{background:var(--cyan);color:var(--navy);border-color:transparent}
+.portal-btn:hover{background:rgba(34,211,238,0.08)}
+.portal-btn.primary:hover{background:var(--wave)}
+.portal-error{
+  margin-top:0.9rem;
+  color:#ffb4b4;
+  background:rgba(255,0,0,0.08);
+  border:1px solid rgba(255,180,180,0.25);
+  padding:0.7rem 0.85rem;
+  border-radius:10px;
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">İDİGNA <span>#9502</span></a>
+  <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+  <ul class="nav-links">
+    <li><a href="#about" data-i18n="nav.about">Hakkımızda</a></li>
+    <li><a href="#robot" data-i18n="nav.robot">Robot</a></li>
+    <li><a href="#outreach" data-i18n="nav.outreach">Topluma Katkı</a></li>
+    <li><a href="#team" data-i18n="nav.team">Takım</a></li>
+    <li><a href="#sponsors" data-i18n="nav.sponsors">Sponsorlar</a></li>
+    <li><a href="#contact" data-i18n="nav.contact">İletişim</a></li>
+    <li><button class="lang-btn" id="langToggle">EN</button></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="waves">
+    <svg viewBox="0 0 1440 300" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,200 C200,120 400,280 600,200 C800,120 1000,260 1200,180 C1350,120 1400,160 1440,150 L1440,300 L0,300 Z" fill="rgba(14,116,144,0.12)"/>
+      <path d="M0,240 C180,160 360,290 540,220 C720,150 900,280 1080,210 C1260,140 1380,200 1440,185 L1440,300 L0,300 Z" fill="rgba(8,24,40,0.5)"/>
+      <path d="M0,270 C240,210 480,290 720,260 C960,230 1200,285 1440,265 L1440,300 L0,300 Z" fill="rgba(5,16,30,0.8)"/>
+    </svg>
+  </div>
+  <div class="hero-badge" data-i18n="hero.badge">FIRST Robotics Competition</div>
+  <h1 class="hero-title">İD<span class="accent">İ</span>GNA</h1>
+  <p class="hero-number">TEAM · 9502 · TED DİYARBAKIR KOLEJİ</p>
+  <p class="hero-tagline" data-i18n="hero.tagline">"Köklerimizden Gücümüzü Alır, Yeniden Yükseliriz."</p>
+  <div class="hero-cta">
+    <a href="#about" class="btn-primary" data-i18n="hero.cta1">Bizi Keşfet</a>
+    <a href="#sponsors" class="btn-secondary" data-i18n="hero.cta2">Sponsor Ol</a>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat-item fade-up">
+    <span class="stat-num">2023</span>
+    <span class="stat-label" data-i18n="stats.founded">Kuruluş Yılı</span>
+  </div>
+  <div class="stat-item fade-up">
+    <span class="stat-num">800+</span>
+    <span class="stat-label" data-i18n="stats.students">Ulaşılan Öğrenci</span>
+  </div>
+  <div class="stat-item fade-up">
+    <span class="stat-num">4</span>
+    <span class="stat-label" data-i18n="stats.schools">Okul</span>
+  </div>
+  <div class="stat-item fade-up">
+    <span class="stat-num">10</span>
+    <span class="stat-label" data-i18n="stats.members">Takım Üyesi</span>
+  </div>
+  <div class="stat-item fade-up">
+    <span class="stat-num">4×</span>
+    <span class="stat-label" data-i18n="stats.fll">FLL Ev Sahipliği</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-inner">
+    <div class="about-grid">
+      <div class="fade-up">
+        <p class="section-tag" data-i18n="about.tag">Biz Kimiz</p>
+        <h2 class="section-title" data-i18n="about.title">Dicle'nin Ruhundan Doğan Takım</h2>
+        <p class="section-body" data-i18n="about.body">İDİGNA, 2023 yılında TED Diyarbakır Koleji bünyesinde, STEM'i Türkiye'nin doğusunda yaymak ve öğrencilerin mühendislik alanında kendilerini geliştirmelerine fırsat sunmak amacıyla kurulmuş bir FIRST Robotics Competition takımıdır.</p>
+        <p class="section-body" style="margin-top:1rem" data-i18n="about.body2">2025'te önemli bir dönüşüm geçiren takımımız; yeni üyeler, mezun mentörler ve deneyimli koçlarla daha güçlü ve sürdürülebilir bir yapıya kavuşmuştur.</p>
+      </div>
+      <div class="fade-up" style="display:flex;flex-direction:column;gap:1rem">
+        <div class="about-card">
+          <h3 data-i18n="about.mission_title">🎯 Misyonumuz</h3>
+          <p data-i18n="about.mission">Öğrencilerin yalnızca teknik bilgi edinmelerini değil; problem çözme, takım çalışması ve liderlik becerilerini geliştirerek çok yönlü bireyler haline gelmelerini sağlamak.</p>
+        </div>
+        <div class="about-card">
+          <h3 data-i18n="about.vision_title">🚀 Vizyonumuz</h3>
+          <p data-i18n="about.vision">STEM alanında fırsat eşitliğini güçlendiren, özellikle kız öğrencilerin aktif rol alabildiği kapsayıcı bir ekosistem oluşturmak ve bölgemizden başlayarak geniş bir etki alanı yaratmak.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ORIGIN -->
+<section id="origin" class="alt-bg">
+  <div class="section-inner">
+    <div class="origin-layout">
+      <div class="fade-up">
+        <p class="section-tag" data-i18n="origin.tag">İsmimizin Kökeni</p>
+        <h2 class="section-title" data-i18n="origin.title">Binlerce Yıllık Bir İsim</h2>
+        <p class="section-body" data-i18n="origin.body">İDİGNA ismi, Dicle Nehri'nin Sümer dilindeki karşılığından gelmektedir. Bu isim, sürekliliği, akışı ve değişime rağmen varlığını sürdürebilmeyi temsil eder — tıpkı takımımız gibi.</p>
+        <div class="origin-quote" data-i18n="origin.quote">"Geçmişten ilham alarak geleceği inşa eden bir takım."</div>
+      </div>
+      <div class="fade-up">
+        <p class="section-tag" data-i18n="origin.river_tag">Dicle Nehri · Tarihsel İsimler</p>
+        <div class="river-names">
+          <div class="river-row">
+            <span class="river-civ">Sümer</span>
+            <span class="river-name">Idigna / İDİGNA</span>
+          </div>
+          <div class="river-row">
+            <span class="river-civ">Akad</span>
+            <span class="river-name">Idiglat</span>
+          </div>
+          <div class="river-row">
+            <span class="river-civ">Grek</span>
+            <span class="river-name">Tigris</span>
+          </div>
+        </div>
+        <p class="section-body" style="margin-top:1.5rem;font-size:0.9rem" data-i18n="origin.mascot">Takım maskotumuz ejderha, zorluklar karşısında yeniden ayağa kalkmayı ve her seferinde daha güçlü ilerlemeyi simgeler. Özellikle 2025'teki yeniden yapılanma sürecimiz bu ruhun en somut örneğidir.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROBOT -->
+<section id="robot">
+  <div class="section-inner">
+    <div class="robot-grid">
+      <div class="fade-up">
+        <p class="section-tag" data-i18n="robot.tag">Robot Tasarımımız</p>
+        <h2 class="section-title" data-i18n="robot.title">Mühendislik Çözümleri</h2>
+        <p class="section-body" data-i18n="robot.body">Robotumuz, sahada yüksek manevra kabiliyeti sağlamak amacıyla swerve sürüş sistemi ile tasarlanmıştır. Mekanik ve elektronik bileşenler sistemler arası uyumu artıracak şekilde optimize edilmiştir.</p>
+        <div class="robot-specs">
+          <div class="spec-row">
+            <span class="spec-icon">⚙️</span>
+            <div class="spec-text">
+              <h4 data-i18n="robot.drive_title">Sürüş Sistemi</h4>
+              <p data-i18n="robot.drive">Swerve drive — hızlı, esnek ve omni-yönlü hareket kabiliyeti.</p>
+            </div>
+          </div>
+          <div class="spec-row">
+            <span class="spec-icon">🎯</span>
+            <div class="spec-text">
+              <h4 data-i18n="robot.intake_title">Intake Mekanizması</h4>
+              <p data-i18n="robot.intake">Yakıt (Fuel) oyun parçalarını hızlı ve kontrollü toplama sistemi.</p>
+            </div>
+          </div>
+          <div class="spec-row">
+            <span class="spec-icon">🚀</span>
+            <div class="spec-text">
+              <h4 data-i18n="robot.shooter_title">Shooter</h4>
+              <p data-i18n="robot.shooter">Çift tekerlekli yapı — gerekli hız ve yönü kazandırarak isabetli atış.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="fade-up" style="display:flex;align-items:center;justify-content:center">
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:2rem;text-align:center;width:100%">
+          <div style="font-size:4rem;margin-bottom:1rem">🤖</div>
+          <p style="font-family:'Cinzel',serif;color:var(--cyan);font-size:0.85rem;letter-spacing:0.1em" data-i18n="robot.photo_placeholder">2025 Sezon Robotu</p>
+          <p style="color:var(--muted);font-size:0.8rem;margin-top:0.5rem" data-i18n="robot.photo_note">Fotoğraf eklemek için img etiketi buraya</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OUTREACH -->
+<section id="outreach" class="alt-bg">
+  <div class="section-inner">
+    <div class="fade-up">
+      <p class="section-tag" data-i18n="outreach.tag">Topluma Katkı</p>
+      <h2 class="section-title" data-i18n="outreach.title">Robotiğin Ötesinde</h2>
+      <p class="section-body" data-i18n="outreach.body">STEM'i yalnızca yarışmada değil, toplumun her katmanına taşıyoruz. Eğitimden sürdürülebilirliğe, kitap bağışından FLL organizasyonuna geniş bir etki alanı oluşturduk.</p>
+    </div>
+    <div class="outreach-grid">
+      <div class="outreach-card fade-up">
+        <div class="outreach-icon">🔬</div>
+        <h3 data-i18n="outreach.stem_title">STEM Eğitimleri</h3>
+        <p data-i18n="outreach.stem">Mühendislik, robotik ve teknoloji alanlarının temellerini farklı okullardaki öğrencilere tanıttık.</p>
+        <span class="outreach-num">300</span><span class="outreach-num-label" data-i18n="outreach.students">öğrenci · 4 okul</span>
+      </div>
+      <div class="outreach-card fade-up">
+        <div class="outreach-icon">♻️</div>
+        <h3 data-i18n="outreach.ewaste_title">E-Atık Geri Dönüşüm Eğitimi</h3>
+        <p data-i18n="outreach.ewaste">İlkokul, ortaokul ve lise düzeyinde elektronik atık farkındalığı ve sorumlu tüketim bilinci oluşturduk.</p>
+        <span class="outreach-num">500</span><span class="outreach-num-label" data-i18n="outreach.students2">öğrenci</span>
+      </div>
+      <div class="outreach-card fade-up">
+        <div class="outreach-icon">📚</div>
+        <h3 data-i18n="outreach.book_title">Kitap Bağışı Projesi</h3>
+        <p data-i18n="outreach.book">Kaynak ihtiyacı bulunan bir devlet okuluna kitap toplama kampanyası düzenledik.</p>
+        <span class="outreach-num">200</span><span class="outreach-num-label" data-i18n="outreach.books">kitap bağışlandı</span>
+      </div>
+      <div class="outreach-card fade-up">
+        <div class="outreach-icon">🏆</div>
+        <h3 data-i18n="outreach.fll_title">FLL Explore Ev Sahipliği</h3>
+        <p data-i18n="outreach.fll">4 yıldır FIRST LEGO League Explore etkinliğine ev sahipliği yapıyoruz. 2026'da 18 takım katılacak.</p>
+        <span class="outreach-num">4×</span><span class="outreach-num-label" data-i18n="outreach.years">sezon</span>
+      </div>
+      <div class="outreach-card fade-up">
+        <div class="outreach-icon">🤝</div>
+        <h3 data-i18n="outreach.collab_title">Takımlar Arası İş Birliği</h3>
+        <p data-i18n="outreach.collab">Harpia Robotics, Robest Robotics, Adroit Androids ve Credentis ile deneyim ve strateji paylaşımı gerçekleştirdik.</p>
+      </div>
+      <div class="outreach-card fade-up">
+        <div class="outreach-icon">🎤</div>
+        <h3 data-i18n="outreach.ftc_title">FTC Takımına Destek</h3>
+        <p data-i18n="outreach.ftc">Bünyemizdeki FTC takımına teknik bilgi, deneyim ve süreç yönetimi konularında aktif destek sağladık. FTC takımımız bu sezon finale kaldı.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section id="team">
+  <div class="section-inner">
+    <div class="fade-up">
+      <p class="section-tag" data-i18n="team.tag">Takım Yapısı</p>
+      <h2 class="section-title" data-i18n="team.title">Arkamızdaki İnsanlar</h2>
+    </div>
+    <div class="team-structure">
+      <div class="team-card fade-up">
+        <div class="team-card-role" data-i18n="team.captain">Takım Kaptanı</div>
+        <div class="team-card-names">Burak Yılmaz</div>
+      </div>
+      <div class="team-card fade-up">
+        <div class="team-card-role" data-i18n="team.mechanical">Mekanik Ekip</div>
+        <div class="team-card-names">Burak Yılmaz<br>Ahmet Suvar Vural<br>Rojhat Aslan<br>Deran Akyol</div>
+      </div>
+      <div class="team-card fade-up">
+        <div class="team-card-role" data-i18n="team.software">Yazılım Ekip</div>
+        <div class="team-card-names">Burak Yılmaz<br>Bedirhan Tanaman<br>Deniz Efe Akpınarlı</div>
+      </div>
+      <div class="team-card fade-up">
+        <div class="team-card-role" data-i18n="team.pr">PR Ekip</div>
+        <div class="team-card-names">Ronya Sida Atabay<br>Helen Amara Kılıç<br>Ela Rengin Eker<br>Defne Emine Dedeoğlu</div>
+      </div>
+      <div class="team-card fade-up">
+        <div class="team-card-role" data-i18n="team.finance">Finans Ekip</div>
+        <div class="team-card-names">Bedirhan Tanaman<br>Deniz Efe Akpınarlı</div>
+      </div>
+      <div class="team-card fade-up">
+        <div class="team-card-role" data-i18n="team.mentors">Mentörler</div>
+        <div class="team-card-names">Danyel Eray Evruk<br>Hevin Acar<br>Eren Gültekin</div>
+      </div>
+      <div class="team-card fade-up">
+        <div class="team-card-role" data-i18n="team.coaches">Takım Koçları</div>
+        <div class="team-card-names">Havva Çetin<br>Selma Balat</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPONSORS -->
+<section id="sponsors" class="alt-bg">
+  <div class="section-inner">
+    <div class="fade-up">
+      <p class="section-tag" data-i18n="sponsors.tag">Sponsorlarımız</p>
+      <h2 class="section-title" data-i18n="sponsors.title">Bizi Destekleyenler</h2>
+      <p class="section-body" data-i18n="sponsors.body">Sponsorlarımızın desteği, çalışmalarımızı sürdürebilmemizde ve bölgemizde STEM kültürünü yaymamızda büyük rol oynamaktadır.</p>
+    </div>
+    <div class="sponsors-grid">
+      <div class="sponsor-card fade-up">
+        <div style="font-size:2.5rem;margin-bottom:1rem">🎓</div>
+        <div class="sponsor-name">Fikret Yüksel Foundation</div>
+        <div class="sponsor-type" data-i18n="sponsors.type1">Kayıt Ücreti Sponsorluğu</div>
+      </div>
+      <div class="sponsor-card fade-up">
+        <div style="font-size:2.5rem;margin-bottom:1rem">🏗️</div>
+        <div class="sponsor-name">Öz Güven Profil</div>
+        <div class="sponsor-type" data-i18n="sponsors.type2">Malzeme Desteği</div>
+      </div>
+      <div class="sponsor-card fade-up">
+        <div style="font-size:2.5rem;margin-bottom:1rem">☕</div>
+        <div class="sponsor-name">Kahve Deposu</div>
+        <div class="sponsor-type" data-i18n="sponsors.type3">Nakit Desteği</div>
+      </div>
+    </div>
+    <div class="sponsor-cta fade-up">
+      <h3 data-i18n="sponsors.cta_title">Sponsor Olmak İster Misiniz?</h3>
+      <p data-i18n="sponsors.cta_body">Diyarbakır'ın gençlerine yatırım yapın. STEM'in Türkiye'nin doğusunda büyümesine katkıda bulunun. Sponsorluk paketlerimiz hakkında bizimle iletişime geçin.</p>
+      <a href="#contact" class="btn-primary" data-i18n="sponsors.cta_btn">İletişime Geç</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-inner">
+    <div class="fade-up">
+      <p class="section-tag" data-i18n="contact.tag">İletişim</p>
+      <h2 class="section-title" data-i18n="contact.title">Bize Ulaşın</h2>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-item fade-up">
+        <span class="contact-icon">📧</span>
+        <div>
+          <div class="contact-label" data-i18n="contact.email">E-posta</div>
+          <div class="contact-value"><a href="mailto:team.idigna.9502@gmail.com">team.idigna.9502@gmail.com</a></div>
+        </div>
+      </div>
+      <div class="contact-item fade-up">
+        <span class="contact-icon">📸</span>
+        <div>
+          <div class="contact-label">Instagram</div>
+          <div class="contact-value"><a href="https://instagram.com/team_idigna" target="_blank">@team_idigna</a></div>
+        </div>
+      </div>
+      <div class="contact-item fade-up" style="grid-column:1/-1">
+        <span class="contact-icon">📍</span>
+        <div>
+          <div class="contact-label" data-i18n="contact.address">Adres</div>
+          <div class="contact-value">Fırat Mahallesi, Aziziye, 583. Sokak No:3<br>TED Diyarbakır Koleji, 21120 Kayapınar / Diyarbakır</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 <span>İDİGNA</span> FRC Team 9502 · TED Diyarbakır Koleji</p>
+  <p style="margin-top:0.5rem;font-size:0.75rem;opacity:0.5" data-i18n="footer.first">FIRST® Robotics Competition'a bağlı resmi takım.</p>
+</footer>
+
+<!-- SPONSOR PORTAL: button + modal (injected) -->
+<button class="sponsor-portal-btn" type="button" onclick="openSponsorModal()">
+  Special to our sponsors
+</button>
+
+<div id="portalBackdrop" class="portal-backdrop{% if modal_open %} open{% endif %}" role="dialog" aria-modal="true" aria-labelledby="portalTitle" onclick="backdropClick(event)">
+  <div class="portal-modal" onclick="event.stopPropagation()">
+    <div id="portalTitle" class="portal-title">Sponsor Portal</div>
+    <div class="portal-sub">Enter your sponsor password to view your personalized dashboard.</div>
+    <form method="post" action="{{ url_for('sponsor_login') }}" autocomplete="off">
+      <div class="portal-field">
+        <label class="portal-label" for="password">Password</label>
+        <input class="portal-input" id="password" name="password" type="password" required />
+      </div>
+      <div class="portal-actions">
+        <button class="portal-btn" type="button" onclick="closeSponsorModal()">Cancel</button>
+        <button class="portal-btn primary" type="submit">Login</button>
+      </div>
+      {% if error %}
+        <div class="portal-error">{{ error }}</div>
+      {% endif %}
+    </form>
+  </div>
+</div>
+
+<script>
+// ─── i18n ───
+const translations = {
+  tr: {
+    "nav.about":"Hakkımızda","nav.robot":"Robot","nav.outreach":"Topluma Katkı","nav.team":"Takım","nav.sponsors":"Sponsorlar","nav.contact":"İletişim",
+    "hero.badge":"FIRST Robotics Competition","hero.tagline":"\"Köklerimizden Gücümüzü Alır, Yeniden Yükseliriz.\"","hero.cta1":"Bizi Keşfet","hero.cta2":"Sponsor Ol",
+    "stats.founded":"Kuruluş Yılı","stats.students":"Ulaşılan Öğrenci","stats.schools":"Okul","stats.members":"Takım Üyesi","stats.fll":"FLL Ev Sahipliği",
+    "about.tag":"Biz Kimiz","about.title":"Dicle'nin Ruhundan Doğan Takım","about.body":"İDİGNA, 2023 yılında TED Diyarbakır Koleji bünyesinde, STEM'i Türkiye'nin doğusunda yaymak ve öğrencilerin mühendislik alanında kendilerini geliştirmelerine fırsat sunmak amacıyla kurulmuş bir FIRST Robotics Competition takımıdır.","about.body2":"2025'te önemli bir dönüşüm geçiren takımımız; yeni üyeler, mezun mentörler ve deneyimli koçlarla daha güçlü ve sürdürülebilir bir yapıya kavuşmuştur.","about.mission_title":"🎯 Misyonumuz","about.mission":"Öğrencilerin yalnızca teknik bilgi edinmelerini değil; problem çözme, takım çalışması ve liderlik becerilerini geliştirerek çok yönlü bireyler haline gelmelerini sağlamak.","about.vision_title":"🚀 Vizyonumuz","about.vision":"STEM alanında fırsat eşitliğini güçlendiren, özellikle kız öğrencilerin aktif rol alabildiği kapsayıcı bir ekosistem oluşturmak ve bölgemizden başlayarak geniş bir etki alanı yaratmak.",
+    "origin.tag":"İsmimizin Kökeni","origin.title":"Binlerce Yıllık Bir İsim","origin.body":"İDİGNA ismi, Dicle Nehri'nin Sümer dilindeki karşılığından gelmektedir. Bu isim, sürekliliği, akışı ve değişime rağmen varlığını sürdürebilmeyi temsil eder — tıpkı takımımız gibi.","origin.quote":"\"Geçmişten ilham alarak geleceği inşa eden bir takım.\"","origin.river_tag":"Dicle Nehri · Tarihsel İsimler","origin.mascot":"Takım maskotumuz ejderha, zorluklar karşısında yeniden ayağa kalkmayı ve her seferinde daha güçlü ilerlemeyi simgeler. Özellikle 2025'teki yeniden yapılanma sürecimiz bu ruhun en somut örneğidir.",
+    "robot.tag":"Robot Tasarımımız","robot.title":"Mühendislik Çözümleri","robot.body":"Robotumuz, sahada yüksek manevra kabiliyeti sağlamak amacıyla swerve sürüş sistemi ile tasarlanmıştır. Mekanik ve elektronik bileşenler sistemler arası uyumu artıracak şekilde optimize edilmiştir.","robot.drive_title":"Sürüş Sistemi","robot.drive":"Swerve drive — hızlı, esnek ve omni-yönlü hareket kabiliyeti.","robot.intake_title":"Intake Mekanizması","robot.intake":"Yakıt (Fuel) oyun parçalarını hızlı ve kontrollü toplama sistemi.","robot.shooter_title":"Shooter","robot.shooter":"Çift tekerlekli yapı — gerekli hız ve yönü kazandırarak isabetli atış.","robot.photo_placeholder":"2025 Sezon Robotu","robot.photo_note":"Fotoğraf eklemek için img etiketi buraya",
+    "outreach.tag":"Topluma Katkı","outreach.title":"Robotiğin Ötesinde","outreach.body":"STEM'i yalnızca yarışmada değil, toplumun her katmanına taşıyoruz.","outreach.stem_title":"STEM Eğitimleri","outreach.stem":"Mühendislik, robotik ve teknoloji alanlarının temellerini farklı okullardaki öğrencilere tanıttık.","outreach.students":"öğrenci · 4 okul","outreach.ewaste_title":"E-Atık Geri Dönüşüm Eğitimi","outreach.ewaste":"İlkokul, ortaokul ve lise düzeyinde elektronik atık farkındalığı ve sorumlu tüketim bilinci oluşturduk.","outreach.students2":"öğrenci","outreach.book_title":"Kitap Bağışı Projesi","outreach.book":"Kaynak ihtiyacı bulunan bir devlet okuluna kitap toplama kampanyası düzenledik.","outreach.books":"kitap bağışlandı","outreach.fll_title":"FLL Explore Ev Sahipliği","outreach.fll":"4 yıldır FIRST LEGO League Explore etkinliğine ev sahipliği yapıyoruz. 2026'da 18 takım katılacak.","outreach.years":"sezon","outreach.collab_title":"Takımlar Arası İş Birliği","outreach.collab":"Harpia Robotics, Robest Robotics, Adroit Androids ve Credentis ile deneyim ve strateji paylaşımı gerçekleştirdik.","outreach.ftc_title":"FTC Takımına Destek","outreach.ftc":"Bünyemizdeki FTC takımına teknik bilgi, deneyim ve süreç yönetimi konularında aktif destek sağladık. FTC takımımız bu sezon finale kaldı.",
+    "team.tag":"Takım Yapısı","team.title":"Arkamızdaki İnsanlar","team.captain":"Takım Kaptanı","team.mechanical":"Mekanik Ekip","team.software":"Yazılım Ekip","team.pr":"PR Ekip","team.finance":"Finans Ekip","team.mentors":"Mentörler","team.coaches":"Takım Koçları",
+    "sponsors.tag":"Sponsorlarımız","sponsors.title":"Bizi Destekleyenler","sponsors.body":"Sponsorlarımızın desteği, çalışmalarımızı sürdürebilmemizde ve bölgemizde STEM kültürünü yaymamızda büyük rol oynamaktadır.","sponsors.type1":"Kayıt Ücreti Sponsorluğu","sponsors.type2":"Malzeme Desteği","sponsors.type3":"Nakit Desteği","sponsors.cta_title":"Sponsor Olmak İster Misiniz?","sponsors.cta_body":"Diyarbakır'ın gençlerine yatırım yapın. STEM'in Türkiye'nin doğusunda büyümesine katkıda bulunun.","sponsors.cta_btn":"İletişime Geç",
+    "contact.tag":"İletişim","contact.title":"Bize Ulaşın","contact.email":"E-posta","contact.address":"Adres",
+    "footer.first":"FIRST® Robotics Competition'a bağlı resmi takım."
+  },
+  en: {
+    "nav.about":"About","nav.robot":"Robot","nav.outreach":"Outreach","nav.team":"Team","nav.sponsors":"Sponsors","nav.contact":"Contact",
+    "hero.badge":"FIRST Robotics Competition","hero.tagline":"\"We Draw Strength from Our Roots, and Rise Again.\"","hero.cta1":"Discover Us","hero.cta2":"Become a Sponsor",
+    "stats.founded":"Founded","stats.students":"Students Reached","stats.schools":"Schools","stats.members":"Team Members","stats.fll":"FLL Events Hosted",
+    "about.tag":"Who We Are","about.title":"A Team Born from the Spirit of the Tigris","about.body":"İDİGNA is a FIRST Robotics Competition team founded in 2023 at TED Diyarbakır College, with the mission of spreading STEM in eastern Turkey and empowering students to grow in engineering.","about.body2":"In 2025, our team underwent a major transformation — welcoming new members, alumni mentors, and experienced coaches to build a stronger, more sustainable structure.","about.mission_title":"🎯 Our Mission","about.mission":"To ensure students develop not just technical knowledge, but also problem-solving, teamwork, and leadership skills to become well-rounded individuals.","about.vision_title":"🚀 Our Vision","about.vision":"To build an inclusive ecosystem where STEM is accessible to all — especially young women — and to create a wide-reaching impact starting from our region.",
+    "origin.tag":"Name Origin","origin.title":"A Name Thousands of Years Old","origin.body":"İDİGNA is the Sumerian name for the Tigris River. It represents continuity, flow, and the ability to persist through change — just like our team.","origin.quote":"\"A team that builds the future by drawing inspiration from the past.\"","origin.river_tag":"Tigris River · Historical Names","origin.mascot":"Our team mascot, the dragon, symbolizes rising after every challenge and advancing stronger each time. Our 2025 restructuring is the most concrete example of this spirit.",
+    "robot.tag":"Our Robot","robot.title":"Engineering Solutions","robot.body":"Our robot is built on a swerve drive system for maximum maneuverability on the field. Mechanical and electronic components are optimized for cross-system harmony.","robot.drive_title":"Drive System","robot.drive":"Swerve drive — fast, flexible, and omnidirectional.","robot.intake_title":"Intake Mechanism","robot.intake":"Fast and controlled collection of Fuel game pieces.","robot.shooter_title":"Shooter","robot.shooter":"Dual-wheel design — delivers the required speed and direction for accurate shots.","robot.photo_placeholder":"2025 Season Robot","robot.photo_note":"Replace this with an img tag for team photo",
+    "outreach.tag":"Community Outreach","outreach.title":"Beyond Robotics","outreach.body":"We bring STEM not just to competitions, but to every layer of our community.","outreach.stem_title":"STEM Workshops","outreach.stem":"We introduced engineering, robotics, and technology fundamentals to students across multiple schools.","outreach.students":"students · 4 schools","outreach.ewaste_title":"E-Waste Recycling Training","outreach.ewaste":"We raised awareness about responsible tech consumption at elementary, middle, and high school levels.","outreach.students2":"students","outreach.book_title":"Book Donation Drive","outreach.book":"We collected and donated books to a public school in need of resources.","outreach.books":"books donated","outreach.fll_title":"FLL Explore Host","outreach.fll":"We have hosted FIRST LEGO League Explore for 4 years. 18 teams are expected in 2026.","outreach.years":"seasons","outreach.collab_title":"Inter-Team Collaboration","outreach.collab":"We exchanged knowledge and strategy with Harpia Robotics, Robest Robotics, Adroit Androids, and Credentis.","outreach.ftc_title":"FTC Team Support","outreach.ftc":"We actively supported our FTC team with technical knowledge and process management. They reached the finals this season.",
+    "team.tag":"Team Structure","team.title":"The People Behind Us","team.captain":"Team Captain","team.mechanical":"Mechanical","team.software":"Software","team.pr":"PR","team.finance":"Finance","team.mentors":"Mentors","team.coaches":"Coaches",
+    "sponsors.tag":"Our Sponsors","sponsors.title":"Those Who Support Us","sponsors.body":"Our sponsors play a crucial role in sustaining our work and spreading STEM culture throughout our region.","sponsors.type1":"Registration Fee Sponsorship","sponsors.type2":"Material Support","sponsors.type3":"Cash Support","sponsors.cta_title":"Interested in Sponsoring?","sponsors.cta_body":"Invest in the youth of Diyarbakır. Help grow STEM in eastern Turkey. Reach out to learn about our sponsorship packages.","sponsors.cta_btn":"Get in Touch",
+    "contact.tag":"Contact","contact.title":"Reach Out","contact.email":"Email","contact.address":"Address",
+    "footer.first":"Official FIRST® Robotics Competition team."
+  }
+};
+
+// Detect language
+const systemLang = navigator.language.startsWith('tr') ? 'tr' : 'en';
+let currentLang = systemLang;
+
+function applyLang(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  document.getElementById('langToggle').textContent = lang === 'tr' ? 'EN' : 'TR';
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (translations[lang][key]) el.textContent = translations[lang][key];
+  });
+  // Update page title
+  document.title = lang === 'tr' ? 'İDİGNA | FRC Takım 9502' : 'İDİGNA | FRC Team 9502';
+}
+
+document.getElementById('langToggle').addEventListener('click', () => {
+  applyLang(currentLang === 'tr' ? 'en' : 'tr');
+});
+
+applyLang(currentLang);
+
+// ─── Scroll animations ───
+const observer = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+    }
+  });
+}, {threshold: 0.1});
+
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+// ─── Close mobile nav on link click ───
+document.querySelectorAll('.nav-links a').forEach(a => {
+  a.addEventListener('click', () => document.querySelector('.nav-links').classList.remove('open'));
+});
+
+// ─── Sponsor portal modal controls (injected) ───
+function openSponsorModal(){
+  const b = document.getElementById('portalBackdrop');
+  b.classList.add('open');
+  setTimeout(() => {
+    const p = document.getElementById('password');
+    if (p) p.focus();
+  }, 50);
+}
+function closeSponsorModal(){
+  const b = document.getElementById('portalBackdrop');
+  b.classList.remove('open');
+}
+function backdropClick(e){
+  if (e.target && e.target.id === 'portalBackdrop') closeSponsorModal();
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeSponsorModal();
+});
+
+{% if modal_open %}
+  // open modal automatically on invalid password
+  openSponsorModal();
+{% endif %}
+</script>
+</body>
+</html>
