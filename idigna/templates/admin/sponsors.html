@@ -7,16 +7,26 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
-    :root{--navy:#05101e;--deep:#081828;--cyan:#22d3ee;--muted:#7a9bb5;--card:#0b1f30;--border:rgba(34,211,238,0.15);--gold:#f0c040;}
+    :root{--navy:#05101e; --deep:#081828; --teal:#0e7490; --cyan:#22d3ee; --wave:#38bdf8; --gold:#f0c040; --text:#e2eaf4; --muted:#7a9bb5; --card:#0b1f30; --border:rgba(34,211,238,0.15);}
     *{box-sizing:border-box}
-    body{margin:0;background:var(--navy);color:#e2eaf4;font-family:'Outfit',sans-serif}
-    header{position:sticky;top:0;background:rgba(5,16,30,0.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;z-index:10}
+    body{margin:0;font-family:'Outfit',sans-serif;background:#05101e;color:#e2eaf4}
+    h1,h2,h3{font-family:'Cinzel',serif}
+    header{position:sticky;top:0;background:rgba(5,16,30,0.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;z-index:10;gap:1rem;flex-wrap:wrap}
     header .brand{font-family:'Cinzel',serif;letter-spacing:0.08em;color:var(--cyan);font-weight:900;text-decoration:none}
+    header .right{display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;justify-content:flex-end}
     header a{color:var(--muted);text-decoration:none;margin-left:1rem}
+    .lang-btn{
+      background:none;border:1px solid var(--border);
+      color:var(--cyan);padding:0.3rem 0.8rem;
+      border-radius:6px;cursor:pointer;
+      font-family:'Outfit',sans-serif;font-size:0.8rem;
+      letter-spacing:0.08em;transition:all 0.2s;
+    }
+    .lang-btn:hover{background:var(--cyan);color:var(--navy)}
     main{max-width:1200px;margin:0 auto;padding:2rem 1.5rem;display:grid;grid-template-columns:1.4fr 0.9fr;gap:1.25rem}
     @media(max-width:960px){main{grid-template-columns:1fr}}
     .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.2rem}
-    h1{margin:0 0 1rem;font-family:'Cinzel',serif;color:#fff;font-size:1.4rem}
+    h1{margin:0 0 1rem;color:#fff;font-size:1.4rem}
     .muted{color:var(--muted)}
     table{width:100%;border-collapse:collapse}
     th,td{padding:0.75rem 0.6rem;border-bottom:1px solid rgba(34,211,238,0.10);vertical-align:top}
@@ -35,33 +45,36 @@
     .err{margin-top:1rem;color:#ffb4b4;background:rgba(255,0,0,0.08);border:1px solid rgba(255,180,180,0.25);padding:0.75rem 0.9rem;border-radius:8px}
     .hint{font-size:0.85rem;color:var(--muted);margin-top:0.5rem;line-height:1.6}
     code{color:var(--cyan)}
+    .secret-inline{display:inline-flex;align-items:center;gap:0.5rem;flex-wrap:wrap}
+    .btn-copy{padding:0.25rem 0.55rem;font-size:0.75rem;border-radius:999px;line-height:1}
   </style>
 </head>
 <body>
   <header>
-    <a class="brand" href="{{ url_for('admin_panel') }}">İDİGNA · Admin</a>
-    <div>
-      <a href="{{ url_for('admin_panel') }}">Overview</a>
-      <a href="{{ url_for('admin_updates') }}">Updates</a>
-      <a href="{{ url_for('logout') }}">Logout</a>
+    <a class="brand" href="{{ url_for('admin_panel') }}" data-i18n="admin.brand">İDİGNA · Admin</a>
+    <div class="right">
+      <a href="{{ url_for('admin_panel') }}" data-i18n="admin.nav.overview">Overview</a>
+      <a href="{{ url_for('admin_updates') }}" data-i18n="admin.nav.updates">Updates</a>
+      <a href="{{ url_for('logout') }}" data-i18n="admin.nav.logout">Logout</a>
+      <button class="lang-btn" type="button" id="langToggle">EN</button>
     </div>
   </header>
 
   <main>
     <section class="card">
-      <h1>Sponsors</h1>
-      <p class="muted">Plain passwords are always visible to admin by spec.</p>
+      <h1 data-i18n="admin.sponsors.title">Sponsors</h1>
+      <p class="muted" data-i18n="admin.sponsors.note">Plain passwords are always visible to admin by spec.</p>
       <div style="overflow:auto">
         <table>
           <thead>
             <tr>
-              <th>Name</th>
-              <th>ID</th>
-              <th>Plain password</th>
-              <th>Type</th>
-              <th>Color</th>
-              <th>Logo</th>
-              <th>Actions</th>
+              <th data-i18n="admin.sponsors.th.name">Name</th>
+              <th data-i18n="admin.sponsors.th.id">ID</th>
+              <th data-i18n="admin.sponsors.th.plain">Plain password</th>
+              <th data-i18n="admin.sponsors.th.type">Type</th>
+              <th data-i18n="admin.sponsors.th.color">Color</th>
+              <th data-i18n="admin.sponsors.th.logo">Logo</th>
+              <th data-i18n="admin.sponsors.th.actions">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -69,14 +82,25 @@
               <tr>
                 <td>{{ s["name"] }}</td>
                 <td><code>{{ s["id"] }}</code></td>
-                <td><code>{{ s["plain_password"] }}</code></td>
+                <td>
+                  <span class="secret-inline">
+                    <code>{{ s["plain_password"] }}</code>
+                    <button
+                      type="button"
+                      class="btn btn-copy"
+                      data-copy-text="{{ s['plain_password'] }}"
+                      onclick="copyPlainPassword(this)"
+                      data-i18n="admin.copy"
+                    >Copy</button>
+                  </span>
+                </td>
                 <td>{% if s["type"] %}<span class="pill">{{ s["type"] }}</span>{% else %}<span class="muted">—</span>{% endif %}</td>
                 <td><span class="colorbox" style="background: {{ s['color'] }}"></span><code>{{ s["color"] }}</code></td>
                 <td>{% if s["logo"] %}<span class="muted">{{ s["logo"] }}</span>{% else %}<span class="muted">—</span>{% endif %}</td>
                 <td>
-                  <a class="btn" href="{{ url_for('admin_edit_sponsor', sponsor_id=s['id']) }}">Edit</a>
-                  <form class="inline" method="post" action="{{ url_for('admin_delete_sponsor', sponsor_id=s['id']) }}" onsubmit="return confirm('Delete sponsor?');">
-                    <button class="btn btn-danger" type="submit">Delete</button>
+                  <a class="btn" href="{{ url_for('admin_edit_sponsor', sponsor_id=s['id']) }}" data-i18n="admin.sponsors.edit">Edit</a>
+                  <form class="inline" method="post" action="{{ url_for('admin_delete_sponsor', sponsor_id=s['id']) }}" data-confirm-key="admin.sponsors.confirm_delete" onsubmit="return confirmDeleteSponsor(this);">
+                    <button class="btn btn-danger" type="submit" data-i18n="admin.sponsors.delete">Delete</button>
                   </form>
                 </td>
               </tr>
@@ -87,33 +111,180 @@
     </section>
 
     <aside class="card">
-      <h1>Add sponsor</h1>
-      <p class="hint">Password is auto-generated on create and shown on the overview page.</p>
+      <h1 data-i18n="admin.sponsors.add_title">Add sponsor</h1>
+      <p class="hint" data-i18n="admin.sponsors.add_hint">Password is auto-generated on create and shown on the overview page.</p>
       <form method="post" action="{{ url_for('admin_sponsors') }}" enctype="multipart/form-data">
-        <label for="name">Name</label>
+        <label for="name" data-i18n="admin.sponsors.lbl.name">Name</label>
         <input id="name" name="name" required />
 
-        <label for="type">Type</label>
-        <input id="type" name="type" placeholder="Malzeme Desteği" />
+        <label for="type" data-i18n="admin.sponsors.lbl.type">Type</label>
+        <input id="type" name="type" data-i18n-placeholder="admin.sponsors.ph.type" placeholder="Malzeme Desteği" />
 
-        <label for="color">Color</label>
+        <label for="color" data-i18n="admin.sponsors.lbl.color">Color</label>
         <input id="color" name="color" type="color" value="#22d3ee" />
 
-        <label for="logo">Logo (png/jpg/jpeg/gif)</label>
+        <label for="logo" data-i18n="admin.sponsors.lbl.logo">Logo (png/jpg/jpeg/gif)</label>
         <input id="logo" name="logo" type="file" accept=".png,.jpg,.jpeg,.gif" />
 
-        <label for="message">Message</label>
-        <textarea id="message" name="message" placeholder="Special thanks message..."></textarea>
+        <label for="message" data-i18n="admin.sponsors.lbl.message">Message</label>
+        <textarea id="message" name="message" data-i18n-placeholder="admin.sponsors.ph.message" placeholder="Special thanks message..."></textarea>
 
         <div style="margin-top:1.2rem">
-          <button class="btn" type="submit">Create sponsor</button>
+          <button class="btn" type="submit" data-i18n="admin.sponsors.create">Create sponsor</button>
         </div>
 
         {% if error %}
-          <div class="err">{{ error }}</div>
+          <div class="err" data-i18n-err="name_required">{{ error }}</div>
         {% endif %}
       </form>
     </aside>
   </main>
+
+  <script>
+    const LANG_KEY = 'idigna_lang';
+    const translations = {
+      tr: {
+        "admin.brand":"İDİGNA · Yönetim",
+        "admin.nav.overview":"Genel bakış",
+        "admin.nav.updates":"Güncellemeler",
+        "admin.nav.logout":"Çıkış",
+        "admin.sponsors.title":"Sponsorlar",
+        "admin.sponsors.note":"Şartname gereği düz şifreler yalnızca yöneticiye görünür.",
+        "admin.sponsors.th.name":"Ad",
+        "admin.sponsors.th.id":"Kimlik",
+        "admin.sponsors.th.plain":"Düz şifre",
+        "admin.sponsors.th.type":"Tür",
+        "admin.sponsors.th.color":"Renk",
+        "admin.sponsors.th.logo":"Logo",
+        "admin.sponsors.th.actions":"İşlemler",
+        "admin.sponsors.edit":"Düzenle",
+        "admin.sponsors.delete":"Sil",
+        "admin.sponsors.confirm_delete":"Sponsor silinsin mi?",
+        "admin.sponsors.add_title":"Sponsor ekle",
+        "admin.sponsors.add_hint":"Şifre oluşturulur ve genel bakış sayfasında gösterilir.",
+        "admin.sponsors.lbl.name":"Ad",
+        "admin.sponsors.lbl.type":"Tür",
+        "admin.sponsors.lbl.color":"Renk",
+        "admin.sponsors.lbl.logo":"Logo (png/jpg/jpeg/gif)",
+        "admin.sponsors.lbl.message":"Mesaj",
+        "admin.sponsors.ph.type":"Malzeme Desteği",
+        "admin.sponsors.ph.message":"Özel teşekkür mesajı...",
+        "admin.sponsors.create":"Sponsor oluştur",
+        "admin.err.name_required":"Ad zorunludur",
+        "admin.copy":"Kopyala",
+        "admin.copied":"Kopyalandı"
+      },
+      en: {
+        "admin.brand":"İDİGNA · Admin",
+        "admin.nav.overview":"Overview",
+        "admin.nav.updates":"Updates",
+        "admin.nav.logout":"Logout",
+        "admin.sponsors.title":"Sponsors",
+        "admin.sponsors.note":"Plain passwords are always visible to admin by spec.",
+        "admin.sponsors.th.name":"Name",
+        "admin.sponsors.th.id":"ID",
+        "admin.sponsors.th.plain":"Plain password",
+        "admin.sponsors.th.type":"Type",
+        "admin.sponsors.th.color":"Color",
+        "admin.sponsors.th.logo":"Logo",
+        "admin.sponsors.th.actions":"Actions",
+        "admin.sponsors.edit":"Edit",
+        "admin.sponsors.delete":"Delete",
+        "admin.sponsors.confirm_delete":"Delete sponsor?",
+        "admin.sponsors.add_title":"Add sponsor",
+        "admin.sponsors.add_hint":"Password is auto-generated on create and shown on the overview page.",
+        "admin.sponsors.lbl.name":"Name",
+        "admin.sponsors.lbl.type":"Type",
+        "admin.sponsors.lbl.color":"Color",
+        "admin.sponsors.lbl.logo":"Logo (png/jpg/jpeg/gif)",
+        "admin.sponsors.lbl.message":"Message",
+        "admin.sponsors.ph.type":"Material support",
+        "admin.sponsors.ph.message":"Special thanks message...",
+        "admin.sponsors.create":"Create sponsor",
+        "admin.err.name_required":"Name is required",
+        "admin.copy":"Copy",
+        "admin.copied":"Copied"
+      }
+    };
+
+    function getInitialLang() {
+      try {
+        const stored = localStorage.getItem(LANG_KEY);
+        if (stored === 'tr' || stored === 'en') return stored;
+      } catch (e) {}
+      return navigator.language.startsWith('tr') ? 'tr' : 'en';
+    }
+
+    let currentLang = getInitialLang();
+
+    function applyLang(lang) {
+      currentLang = lang;
+      try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
+      document.documentElement.lang = lang;
+      document.getElementById('langToggle').textContent = lang === 'tr' ? 'EN' : 'TR';
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang][key]) el.textContent = translations[lang][key];
+      });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (translations[lang][key]) el.setAttribute('placeholder', translations[lang][key]);
+      });
+      document.querySelectorAll('[data-i18n-err]').forEach(el => {
+        const key = el.getAttribute('data-i18n-err');
+        if (key === 'name_required' && translations[lang]['admin.err.name_required']) {
+          el.textContent = translations[lang]['admin.err.name_required'];
+        }
+      });
+
+      document.title = lang === 'tr' ? 'Sponsorlar · Yönetim · İDİGNA' : 'Sponsors · Admin · İDİGNA';
+    }
+
+    function confirmDeleteSponsor(form) {
+      const key = form.getAttribute('data-confirm-key');
+      const msg = translations[currentLang][key] || translations['en'][key];
+      return confirm(msg);
+    }
+
+    async function copyPlainPassword(btn) {
+      const text = btn.getAttribute('data-copy-text') || '';
+      if (!text) return;
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.setAttribute('readonly', '');
+          ta.style.position = 'fixed';
+          ta.style.left = '-9999px';
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+        }
+        btn.textContent = translations[currentLang]['admin.copied'] || 'Copied';
+        setTimeout(() => {
+          const key = btn.getAttribute('data-i18n');
+          if (key && translations[currentLang][key]) btn.textContent = translations[currentLang][key];
+        }, 900);
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    document.getElementById('langToggle').addEventListener('click', () => {
+      applyLang(currentLang === 'tr' ? 'en' : 'tr');
+    });
+
+    applyLang(currentLang);
+
+    window.addEventListener('storage', (e) => {
+      if (e.key === LANG_KEY && (e.newValue === 'tr' || e.newValue === 'en')) {
+        applyLang(e.newValue);
+      }
+    });
+  </script>
 </body>
 </html>

@@ -7,12 +7,22 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
-    :root{--navy:#05101e;--deep:#081828;--cyan:#22d3ee;--muted:#7a9bb5;--card:#0b1f30;--border:rgba(34,211,238,0.15);}
+    :root{--navy:#05101e; --deep:#081828; --teal:#0e7490; --cyan:#22d3ee; --wave:#38bdf8; --gold:#f0c040; --text:#e2eaf4; --muted:#7a9bb5; --card:#0b1f30; --border:rgba(34,211,238,0.15);}
     *{box-sizing:border-box}
-    body{margin:0;background:var(--navy);color:#e2eaf4;font-family:'Outfit',sans-serif;min-height:100vh}
-    header{position:sticky;top:0;background:rgba(5,16,30,0.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
+    body{margin:0;font-family:'Outfit',sans-serif;background:#05101e;color:#e2eaf4;min-height:100vh}
+    h1,h2,h3{font-family:'Cinzel',serif}
+    header{position:sticky;top:0;background:rgba(5,16,30,0.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
     header .brand{font-family:'Cinzel',serif;letter-spacing:0.08em;color:var(--cyan);font-weight:900;text-decoration:none}
+    header .right{display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;justify-content:flex-end}
     header a{color:var(--muted);text-decoration:none;margin-left:1rem}
+    .lang-btn{
+      background:none;border:1px solid var(--border);
+      color:var(--cyan);padding:0.3rem 0.8rem;
+      border-radius:6px;cursor:pointer;
+      font-family:'Outfit',sans-serif;font-size:0.8rem;
+      letter-spacing:0.08em;transition:all 0.2s;
+    }
+    .lang-btn:hover{background:var(--cyan);color:var(--navy)}
     main{max-width:1100px;margin:0 auto;padding:2rem 1.5rem}
     .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
     .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.2rem}
@@ -23,40 +33,151 @@
     .btn:hover{background:rgba(34,211,238,0.08)}
     .notice{margin-top:1rem;background:rgba(34,211,238,0.06);border:1px solid rgba(34,211,238,0.18);padding:0.9rem 1rem;border-radius:10px}
     code{color:var(--cyan)}
+    .secret-inline{display:inline-flex;align-items:center;gap:0.5rem;flex-wrap:wrap;vertical-align:middle}
+    .btn-copy{padding:0.25rem 0.55rem;font-size:0.75rem;border-radius:999px;line-height:1;border:1px solid var(--border);color:var(--cyan);background:transparent;cursor:pointer}
+    .btn-copy:hover{background:rgba(34,211,238,0.08)}
   </style>
 </head>
 <body>
   <header>
-    <a class="brand" href="{{ url_for('admin_panel') }}">İDİGNA · Admin</a>
-    <div>
-      <a href="{{ url_for('index') }}">Site</a>
-      <a href="{{ url_for('logout') }}">Logout</a>
+    <a class="brand" href="{{ url_for('admin_panel') }}" data-i18n="admin.brand">İDİGNA · Admin</a>
+    <div class="right">
+      <a href="{{ url_for('index') }}" data-i18n="admin.nav.site">Site</a>
+      <a href="{{ url_for('logout') }}" data-i18n="admin.nav.logout">Logout</a>
+      <button class="lang-btn" type="button" id="langToggle">EN</button>
     </div>
   </header>
 
   <main>
     <div class="grid">
       <div class="card">
-        <div class="label">Sponsors</div>
+        <div class="label" data-i18n="admin.panel.sponsors_label">Sponsors</div>
         <div class="num">{{ sponsor_count }}</div>
         <div class="links">
-          <a class="btn" href="{{ url_for('admin_sponsors') }}">Manage sponsors</a>
+          <a class="btn" href="{{ url_for('admin_sponsors') }}" data-i18n="admin.panel.manage_sponsors">Manage sponsors</a>
         </div>
       </div>
       <div class="card">
-        <div class="label">Weekly updates</div>
+        <div class="label" data-i18n="admin.panel.updates_label">Weekly updates</div>
         <div class="num">{{ update_count }}</div>
         <div class="links">
-          <a class="btn" href="{{ url_for('admin_updates') }}">Manage updates</a>
+          <a class="btn" href="{{ url_for('admin_updates') }}" data-i18n="admin.panel.manage_updates">Manage updates</a>
         </div>
       </div>
     </div>
 
     {% if created_password and created_id %}
       <div class="notice">
-        Created sponsor <code>{{ created_id }}</code> password: <code>{{ created_password }}</code>
+        <span data-i18n="admin.panel.created_prefix">Created sponsor</span>
+        <code>{{ created_id }}</code>
+        <span data-i18n="admin.panel.created_mid">password:</span>
+        <span class="secret-inline">
+          <code>{{ created_password }}</code>
+          <button
+            type="button"
+            class="btn-copy"
+            data-copy-text="{{ created_password }}"
+            onclick="copyPlainPassword(this)"
+            data-i18n="admin.copy"
+          >Copy</button>
+        </span>
       </div>
     {% endif %}
   </main>
+
+  <script>
+    const LANG_KEY = 'idigna_lang';
+    const translations = {
+      tr: {
+        "admin.brand":"İDİGNA · Yönetim",
+        "admin.nav.site":"Site",
+        "admin.nav.logout":"Çıkış",
+        "admin.panel.sponsors_label":"Sponsorlar",
+        "admin.panel.manage_sponsors":"Sponsorları yönet",
+        "admin.panel.updates_label":"Haftalık güncellemeler",
+        "admin.panel.manage_updates":"Güncellemeleri yönet",
+        "admin.panel.created_prefix":"Sponsor oluşturuldu",
+        "admin.panel.created_mid":"şifre:",
+        "admin.copy":"Kopyala",
+        "admin.copied":"Kopyalandı"
+      },
+      en: {
+        "admin.brand":"İDİGNA · Admin",
+        "admin.nav.site":"Site",
+        "admin.nav.logout":"Logout",
+        "admin.panel.sponsors_label":"Sponsors",
+        "admin.panel.manage_sponsors":"Manage sponsors",
+        "admin.panel.updates_label":"Weekly updates",
+        "admin.panel.manage_updates":"Manage updates",
+        "admin.panel.created_prefix":"Created sponsor",
+        "admin.panel.created_mid":"password:",
+        "admin.copy":"Copy",
+        "admin.copied":"Copied"
+      }
+    };
+
+    function getInitialLang() {
+      try {
+        const stored = localStorage.getItem(LANG_KEY);
+        if (stored === 'tr' || stored === 'en') return stored;
+      } catch (e) {}
+      return navigator.language.startsWith('tr') ? 'tr' : 'en';
+    }
+
+    let currentLang = getInitialLang();
+
+    function applyLang(lang) {
+      currentLang = lang;
+      try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
+      document.documentElement.lang = lang;
+      document.getElementById('langToggle').textContent = lang === 'tr' ? 'EN' : 'TR';
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang][key]) el.textContent = translations[lang][key];
+      });
+
+      document.title = lang === 'tr' ? 'Yönetim Paneli · İDİGNA' : 'Admin Panel · İDİGNA';
+    }
+
+    async function copyPlainPassword(btn) {
+      const text = btn.getAttribute('data-copy-text') || '';
+      if (!text) return;
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.setAttribute('readonly', '');
+          ta.style.position = 'fixed';
+          ta.style.left = '-9999px';
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+        }
+        btn.textContent = translations[currentLang]['admin.copied'] || 'Copied';
+        setTimeout(() => {
+          const key = btn.getAttribute('data-i18n');
+          if (key && translations[currentLang][key]) btn.textContent = translations[currentLang][key];
+        }, 900);
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    document.getElementById('langToggle').addEventListener('click', () => {
+      applyLang(currentLang === 'tr' ? 'en' : 'tr');
+    });
+
+    applyLang(currentLang);
+
+    window.addEventListener('storage', (e) => {
+      if (e.key === LANG_KEY && (e.newValue === 'tr' || e.newValue === 'en')) {
+        applyLang(e.newValue);
+      }
+    });
+  </script>
 </body>
 </html>

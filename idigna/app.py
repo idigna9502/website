@@ -4,9 +4,11 @@ import secrets
 import string
 from datetime import date as date_cls
 from pathlib import Path
+import time
 
 from flask import (
     Flask,
+    abort,
     redirect,
     render_template,
     request,
@@ -28,7 +30,7 @@ app = Flask(__name__, template_folder="templates", static_folder="static")
 app.secret_key = os.environ.get("SECRET_KEY")
 
 
-def generate_password(length: int = 12) -> str:
+def generate_password(length: int = 6) -> str:
     alphabet = string.ascii_letters + string.digits
     return "".join(secrets.choice(alphabet) for _ in range(length))
 
@@ -77,6 +79,66 @@ def _session_defaults():
 
 
 db.init_db()
+
+
+# Simple in-memory rate limiting (per-process).
+# Targets login endpoints to slow brute force attempts.
+_RATE: dict[tuple[str, str], list[float]] = {}
+
+
+def _client_ip() -> str:
+    xff = request.headers.get("X-Forwarded-For", "")
+    if xff:
+        return xff.split(",")[0].strip()
+    return request.remote_addr or "unknown"
+
+
+def _check_rate_limit(key: str, limit: int, window_seconds: int) -> None:
+    now = time.time()
+    ip = _client_ip()
+    bucket_key = (ip, key)
+    bucket = _RATE.get(bucket_key, [])
+    cutoff = now - window_seconds
+    bucket = [ts for ts in bucket if ts >= cutoff]
+    if len(bucket) >= limit:
+        abort(429)
+    bucket.append(now)
+    _RATE[bucket_key] = bucket
+
+
+@app.before_request
+def _rate_limit():
+    # Don't rate limit static assets.
+    if request.path.startswith("/static/"):
+        return None
+    if request.method != "POST":
+        return None
+
+    if request.path == "/login":
+        _check_rate_limit("sponsor_login", limit=10, window_seconds=60)
+    elif request.path == "/admin/login":
+        _check_rate_limit("admin_login", limit=12, window_seconds=60)
+    return None
+
+
+@app.errorhandler(404)
+def _not_found(_e):
+    # Avoid breaking missing assets by redirecting them to HTML.
+    if request.path.startswith("/static/"):
+        return ("Not Found", 404)
+    return redirect(url_for("index"))
+
+
+@app.errorhandler(429)
+def _too_many_requests(_e):
+    # For sponsor login, bring user back to homepage with modal open.
+    if request.path == "/login":
+        return render_template(
+            "index.html",
+            modal_open=True,
+            error="Too many attempts. Please wait a moment and try again.",
+        ), 429
+    return ("Too Many Requests", 429)
 
 
 @app.get("/")

@@ -7,16 +7,26 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
-    :root{--navy:#05101e;--deep:#081828;--cyan:#22d3ee;--muted:#7a9bb5;--card:#0b1f30;--border:rgba(34,211,238,0.15);}
+    :root{--navy:#05101e; --deep:#081828; --teal:#0e7490; --cyan:#22d3ee; --wave:#38bdf8; --gold:#f0c040; --text:#e2eaf4; --muted:#7a9bb5; --card:#0b1f30; --border:rgba(34,211,238,0.15);}
     *{box-sizing:border-box}
-    body{margin:0;background:var(--navy);color:#e2eaf4;font-family:'Outfit',sans-serif}
-    header{position:sticky;top:0;background:rgba(5,16,30,0.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;z-index:10}
+    body{margin:0;font-family:'Outfit',sans-serif;background:#05101e;color:#e2eaf4}
+    h1,h2,h3{font-family:'Cinzel',serif}
+    header{position:sticky;top:0;background:rgba(5,16,30,0.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;z-index:10;gap:1rem;flex-wrap:wrap}
     header .brand{font-family:'Cinzel',serif;letter-spacing:0.08em;color:var(--cyan);font-weight:900;text-decoration:none}
+    header .right{display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;justify-content:flex-end}
     header a{color:var(--muted);text-decoration:none;margin-left:1rem}
+    .lang-btn{
+      background:none;border:1px solid var(--border);
+      color:var(--cyan);padding:0.3rem 0.8rem;
+      border-radius:6px;cursor:pointer;
+      font-family:'Outfit',sans-serif;font-size:0.8rem;
+      letter-spacing:0.08em;transition:all 0.2s;
+    }
+    .lang-btn:hover{background:var(--cyan);color:var(--navy)}
     main{max-width:1200px;margin:0 auto;padding:2rem 1.5rem;display:grid;grid-template-columns:1.2fr 0.8fr;gap:1.25rem}
     @media(max-width:960px){main{grid-template-columns:1fr}}
     .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.2rem}
-    h1{margin:0 0 1rem;font-family:'Cinzel',serif;color:#fff;font-size:1.4rem}
+    h1{margin:0 0 1rem;color:#fff;font-size:1.4rem}
     .muted{color:var(--muted)}
     .update{border:1px solid rgba(34,211,238,0.12);border-radius:10px;padding:1rem;margin-top:0.75rem;background:rgba(8,24,40,0.35)}
     .utitle{display:flex;align-items:baseline;justify-content:space-between;gap:1rem}
@@ -37,18 +47,19 @@
 </head>
 <body>
   <header>
-    <a class="brand" href="{{ url_for('admin_panel') }}">İDİGNA · Admin</a>
-    <div>
-      <a href="{{ url_for('admin_panel') }}">Overview</a>
-      <a href="{{ url_for('admin_sponsors') }}">Sponsors</a>
-      <a href="{{ url_for('logout') }}">Logout</a>
+    <a class="brand" href="{{ url_for('admin_panel') }}" data-i18n="admin.brand">İDİGNA · Admin</a>
+    <div class="right">
+      <a href="{{ url_for('admin_panel') }}" data-i18n="admin.nav.overview">Overview</a>
+      <a href="{{ url_for('admin_sponsors') }}" data-i18n="admin.nav.sponsors">Sponsors</a>
+      <a href="{{ url_for('logout') }}" data-i18n="admin.nav.logout">Logout</a>
+      <button class="lang-btn" type="button" id="langToggle">EN</button>
     </div>
   </header>
 
   <main>
     <section class="card">
-      <h1>Weekly updates</h1>
-      <p class="muted">Newest first. Visible to all sponsors.</p>
+      <h1 data-i18n="admin.updates.list_title">Weekly updates</h1>
+      <p class="muted" data-i18n="admin.updates.list_note">Newest first. Visible to all sponsors.</p>
       {% for u in updates %}
         <div class="update">
           <div class="utitle">
@@ -57,8 +68,8 @@
           </div>
           <div class="ubody">{{ u["body"] }}</div>
           <div style="margin-top:0.75rem">
-            <form class="inline" method="post" action="{{ url_for('admin_delete_update', update_id=u['id']) }}" onsubmit="return confirm('Delete update?');">
-              <button class="btn btn-danger" type="submit">Delete</button>
+            <form class="inline" method="post" action="{{ url_for('admin_delete_update', update_id=u['id']) }}" data-confirm-key="admin.updates.confirm_delete" onsubmit="return confirmDeleteUpdate(this);">
+              <button class="btn btn-danger" type="submit" data-i18n="admin.updates.delete">Delete</button>
             </form>
           </div>
         </div>
@@ -66,26 +77,112 @@
     </section>
 
     <aside class="card">
-      <h1>Post update</h1>
+      <h1 data-i18n="admin.updates.post_title">Post update</h1>
       <form method="post" action="{{ url_for('admin_updates') }}">
-        <label for="title">Title</label>
+        <label for="title" data-i18n="admin.updates.lbl.title">Title</label>
         <input id="title" name="title" required />
 
-        <label for="date">Date</label>
+        <label for="date" data-i18n="admin.updates.lbl.date">Date</label>
         <input id="date" name="date" type="date" value="{{ today }}" required />
 
-        <label for="body">Body</label>
+        <label for="body" data-i18n="admin.updates.lbl.body">Body</label>
         <textarea id="body" name="body" required></textarea>
 
         <div style="margin-top:1.2rem">
-          <button class="btn" type="submit">Create update</button>
+          <button class="btn" type="submit" data-i18n="admin.updates.create">Create update</button>
         </div>
 
         {% if error %}
-          <div class="err">{{ error }}</div>
+          <div class="err" data-i18n-err="body_required">{{ error }}</div>
         {% endif %}
       </form>
     </aside>
   </main>
+
+  <script>
+    const LANG_KEY = 'idigna_lang';
+    const translations = {
+      tr: {
+        "admin.brand":"İDİGNA · Yönetim",
+        "admin.nav.overview":"Genel bakış",
+        "admin.nav.sponsors":"Sponsorlar",
+        "admin.nav.logout":"Çıkış",
+        "admin.updates.list_title":"Haftalık güncellemeler",
+        "admin.updates.list_note":"En yeniler üstte. Tüm sponsorlara görünür.",
+        "admin.updates.delete":"Sil",
+        "admin.updates.confirm_delete":"Güncelleme silinsin mi?",
+        "admin.updates.post_title":"Güncelleme paylaş",
+        "admin.updates.lbl.title":"Başlık",
+        "admin.updates.lbl.date":"Tarih",
+        "admin.updates.lbl.body":"İçerik",
+        "admin.updates.create":"Güncelleme oluştur",
+        "admin.err.body_required":"Başlık ve içerik zorunludur"
+      },
+      en: {
+        "admin.brand":"İDİGNA · Admin",
+        "admin.nav.overview":"Overview",
+        "admin.nav.sponsors":"Sponsors",
+        "admin.nav.logout":"Logout",
+        "admin.updates.list_title":"Weekly updates",
+        "admin.updates.list_note":"Newest first. Visible to all sponsors.",
+        "admin.updates.delete":"Delete",
+        "admin.updates.confirm_delete":"Delete update?",
+        "admin.updates.post_title":"Post update",
+        "admin.updates.lbl.title":"Title",
+        "admin.updates.lbl.date":"Date",
+        "admin.updates.lbl.body":"Body",
+        "admin.updates.create":"Create update",
+        "admin.err.body_required":"Title and body are required"
+      }
+    };
+
+    function getInitialLang() {
+      try {
+        const stored = localStorage.getItem(LANG_KEY);
+        if (stored === 'tr' || stored === 'en') return stored;
+      } catch (e) {}
+      return navigator.language.startsWith('tr') ? 'tr' : 'en';
+    }
+
+    let currentLang = getInitialLang();
+
+    function applyLang(lang) {
+      currentLang = lang;
+      try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
+      document.documentElement.lang = lang;
+      document.getElementById('langToggle').textContent = lang === 'tr' ? 'EN' : 'TR';
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang][key]) el.textContent = translations[lang][key];
+      });
+      document.querySelectorAll('[data-i18n-err]').forEach(el => {
+        const key = el.getAttribute('data-i18n-err');
+        if (key === 'body_required' && translations[lang]['admin.err.body_required']) {
+          el.textContent = translations[lang]['admin.err.body_required'];
+        }
+      });
+
+      document.title = lang === 'tr' ? 'Güncellemeler · Yönetim · İDİGNA' : 'Updates · Admin · İDİGNA';
+    }
+
+    function confirmDeleteUpdate(form) {
+      const key = form.getAttribute('data-confirm-key');
+      const msg = translations[currentLang][key] || translations['en'][key];
+      return confirm(msg);
+    }
+
+    document.getElementById('langToggle').addEventListener('click', () => {
+      applyLang(currentLang === 'tr' ? 'en' : 'tr');
+    });
+
+    applyLang(currentLang);
+
+    window.addEventListener('storage', (e) => {
+      if (e.key === LANG_KEY && (e.newValue === 'tr' || e.newValue === 'en')) {
+        applyLang(e.newValue);
+      }
+    });
+  </script>
 </body>
 </html>

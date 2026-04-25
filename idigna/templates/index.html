@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>İDİGNA | FRC Takım 9502</title>
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -365,6 +366,16 @@ section{position:relative;padding:6rem 2rem}
   color:var(--cyan);margin-bottom:0.8rem;
 }
 .sponsor-cta p{color:var(--muted);font-size:0.95rem;max-width:500px;margin:0 auto 1.5rem}
+.sponsor-portal-cta{margin-top:1.25rem;display:flex;justify-content:center}
+.sponsor-portal-btn{
+  background:transparent;color:var(--gold);
+  border:1px solid rgba(240,192,64,0.55);
+  padding:0.75rem 1.15rem;border-radius:6px;cursor:pointer;
+  font-family:'Outfit',sans-serif;font-weight:600;
+  font-size:0.9rem;letter-spacing:0.05em;
+  transition:all 0.2s;
+}
+.sponsor-portal-btn:hover{background:rgba(240,192,64,0.10);transform:translateY(-2px)}
 
 /* ─── CONTACT ─── */
 .contact-grid{
@@ -402,7 +413,17 @@ footer span{color:var(--cyan)}
 /* ─── MOBILE NAV ─── */
 .nav-toggle{display:none;background:none;border:none;color:var(--cyan);font-size:1.4rem;cursor:pointer}
 @media(max-width:768px){
-  .nav-links{display:none;position:fixed;inset:0;top:64px;background:var(--navy);flex-direction:column;align-items:center;justify-content:center;gap:2rem;z-index:999}
+  .nav-links{
+    display:none;
+    position:fixed;inset:0;top:0;
+    background:rgba(5,16,30,0.98);
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+    gap:2rem;
+    padding-top:calc(64px + 3.5rem);
+    z-index:999
+  }
   .nav-links.open{display:flex}
   .nav-toggle{display:block}
   .stats-bar{flex-direction:column}
@@ -410,22 +431,7 @@ footer span{color:var(--cyan)}
   .stat-item:last-child{border-bottom:none}
 }
 
-/* ─── SPONSOR PORTAL BUTTON + MODAL (injected) ─── */
-.sponsor-portal-btn{
-  position:fixed;right:18px;bottom:18px;z-index:1200;
-  background:rgba(8,24,40,0.82);
-  border:1px solid var(--border);
-  color:var(--cyan);
-  padding:0.75rem 1rem;
-  border-radius:10px;
-  cursor:pointer;
-  font-family:'Outfit',sans-serif;
-  font-size:0.9rem;
-  letter-spacing:0.04em;
-  backdrop-filter:blur(10px);
-  box-shadow:0 0 40px rgba(34,211,238,0.08);
-}
-.sponsor-portal-btn:hover{background:rgba(34,211,238,0.08)}
+/* ─── SPONSOR PORTAL MODAL (injected) ─── */
 .portal-backdrop{
   position:fixed;inset:0;z-index:1300;
   background:rgba(0,0,0,0.55);
@@ -722,7 +728,7 @@ footer span{color:var(--cyan)}
       </div>
       <div class="team-card fade-up">
         <div class="team-card-role" data-i18n="team.mentors">Mentörler</div>
-        <div class="team-card-names">Danyel Eray Evruk<br>Hevin Acar<br>Eren Gültekin</div>
+        <div class="team-card-names">Hevin Acar<br>Eren Gültekin<br>Danyel Eray Evruk</div>
       </div>
       <div class="team-card fade-up">
         <div class="team-card-role" data-i18n="team.coaches">Takım Koçları</div>
@@ -761,6 +767,9 @@ footer span{color:var(--cyan)}
       <h3 data-i18n="sponsors.cta_title">Sponsor Olmak İster Misiniz?</h3>
       <p data-i18n="sponsors.cta_body">Diyarbakır'ın gençlerine yatırım yapın. STEM'in Türkiye'nin doğusunda büyümesine katkıda bulunun. Sponsorluk paketlerimiz hakkında bizimle iletişime geçin.</p>
       <a href="#contact" class="btn-primary" data-i18n="sponsors.cta_btn">İletişime Geç</a>
+      <div class="sponsor-portal-cta">
+        <button type="button" class="sponsor-portal-btn" onclick="openSponsorModal()" data-i18n-html="sponsors.portal_btn">Special to our sponsors</button>
+      </div>
     </div>
   </div>
 </section>
@@ -804,26 +813,22 @@ footer span{color:var(--cyan)}
   <p style="margin-top:0.5rem;font-size:0.75rem;opacity:0.5" data-i18n="footer.first">FIRST® Robotics Competition'a bağlı resmi takım.</p>
 </footer>
 
-<!-- SPONSOR PORTAL: button + modal (injected) -->
-<button class="sponsor-portal-btn" type="button" onclick="openSponsorModal()">
-  Special to our sponsors
-</button>
-
+<!-- SPONSOR PORTAL: modal (injected) -->
 <div id="portalBackdrop" class="portal-backdrop{% if modal_open %} open{% endif %}" role="dialog" aria-modal="true" aria-labelledby="portalTitle" onclick="backdropClick(event)">
   <div class="portal-modal" onclick="event.stopPropagation()">
-    <div id="portalTitle" class="portal-title">Sponsor Portal</div>
-    <div class="portal-sub">Enter your sponsor password to view your personalized dashboard.</div>
+    <div id="portalTitle" class="portal-title" data-i18n="portal.title">Sponsor Portal</div>
+    <div class="portal-sub" data-i18n="portal.subtitle">Enter your sponsor password to view your personalized dashboard.</div>
     <form method="post" action="{{ url_for('sponsor_login') }}" autocomplete="off">
       <div class="portal-field">
-        <label class="portal-label" for="password">Password</label>
+        <label class="portal-label" for="password" data-i18n="portal.password_label">Password</label>
         <input class="portal-input" id="password" name="password" type="password" required />
       </div>
       <div class="portal-actions">
-        <button class="portal-btn" type="button" onclick="closeSponsorModal()">Cancel</button>
-        <button class="portal-btn primary" type="submit">Login</button>
+        <button class="portal-btn" type="button" onclick="closeSponsorModal()" data-i18n="portal.cancel">Cancel</button>
+        <button class="portal-btn primary" type="submit" data-i18n="portal.login">Login</button>
       </div>
       {% if error %}
-        <div class="portal-error">{{ error }}</div>
+        <div class="portal-error" data-i18n-err="invalid_password">{{ error }}</div>
       {% endif %}
     </form>
   </div>
@@ -834,6 +839,13 @@ footer span{color:var(--cyan)}
 const translations = {
   tr: {
     "nav.about":"Hakkımızda","nav.robot":"Robot","nav.outreach":"Topluma Katkı","nav.team":"Takım","nav.sponsors":"Sponsorlar","nav.contact":"İletişim",
+    "sponsors.portal_btn":"🔐 Sponsorlarımıza özel",
+    "portal.title":"Sponsor Portalı",
+    "portal.subtitle":"Kişiselleştirilmiş panonuzu görmek için sponsor şifrenizi girin.",
+    "portal.password_label":"Şifre",
+    "portal.cancel":"İptal",
+    "portal.login":"Giriş",
+    "portal.error_invalid":"Geçersiz şifre",
     "hero.badge":"FIRST Robotics Competition","hero.tagline":"\"Köklerimizden Gücümüzü Alır, Yeniden Yükseliriz.\"","hero.cta1":"Bizi Keşfet","hero.cta2":"Sponsor Ol",
     "stats.founded":"Kuruluş Yılı","stats.students":"Ulaşılan Öğrenci","stats.schools":"Okul","stats.members":"Takım Üyesi","stats.fll":"FLL Ev Sahipliği",
     "about.tag":"Biz Kimiz","about.title":"Dicle'nin Ruhundan Doğan Takım","about.body":"İDİGNA, 2023 yılında TED Diyarbakır Koleji bünyesinde, STEM'i Türkiye'nin doğusunda yaymak ve öğrencilerin mühendislik alanında kendilerini geliştirmelerine fırsat sunmak amacıyla kurulmuş bir FIRST Robotics Competition takımıdır.","about.body2":"2025'te önemli bir dönüşüm geçiren takımımız; yeni üyeler, mezun mentörler ve deneyimli koçlarla daha güçlü ve sürdürülebilir bir yapıya kavuşmuştur.","about.mission_title":"🎯 Misyonumuz","about.mission":"Öğrencilerin yalnızca teknik bilgi edinmelerini değil; problem çözme, takım çalışması ve liderlik becerilerini geliştirerek çok yönlü bireyler haline gelmelerini sağlamak.","about.vision_title":"🚀 Vizyonumuz","about.vision":"STEM alanında fırsat eşitliğini güçlendiren, özellikle kız öğrencilerin aktif rol alabildiği kapsayıcı bir ekosistem oluşturmak ve bölgemizden başlayarak geniş bir etki alanı yaratmak.",
@@ -847,6 +859,13 @@ const translations = {
   },
   en: {
     "nav.about":"About","nav.robot":"Robot","nav.outreach":"Outreach","nav.team":"Team","nav.sponsors":"Sponsors","nav.contact":"Contact",
+    "sponsors.portal_btn":"🔐 Special to our sponsors",
+    "portal.title":"Sponsor Portal",
+    "portal.subtitle":"Enter your sponsor password to view your personalized dashboard.",
+    "portal.password_label":"Password",
+    "portal.cancel":"Cancel",
+    "portal.login":"Login",
+    "portal.error_invalid":"Invalid password",
     "hero.badge":"FIRST Robotics Competition","hero.tagline":"\"We Draw Strength from Our Roots, and Rise Again.\"","hero.cta1":"Discover Us","hero.cta2":"Become a Sponsor",
     "stats.founded":"Founded","stats.students":"Students Reached","stats.schools":"Schools","stats.members":"Team Members","stats.fll":"FLL Events Hosted",
     "about.tag":"Who We Are","about.title":"A Team Born from the Spirit of the Tigris","about.body":"İDİGNA is a FIRST Robotics Competition team founded in 2023 at TED Diyarbakır College, with the mission of spreading STEM in eastern Turkey and empowering students to grow in engineering.","about.body2":"In 2025, our team underwent a major transformation — welcoming new members, alumni mentors, and experienced coaches to build a stronger, more sustainable structure.","about.mission_title":"🎯 Our Mission","about.mission":"To ensure students develop not just technical knowledge, but also problem-solving, teamwork, and leadership skills to become well-rounded individuals.","about.vision_title":"🚀 Our Vision","about.vision":"To build an inclusive ecosystem where STEM is accessible to all — especially young women — and to create a wide-reaching impact starting from our region.",
@@ -860,20 +879,47 @@ const translations = {
   }
 };
 
-// Detect language
-const systemLang = navigator.language.startsWith('tr') ? 'tr' : 'en';
-let currentLang = systemLang;
+const LANG_KEY = 'idigna_lang';
+
+function getInitialLang() {
+  try {
+    const stored = localStorage.getItem(LANG_KEY);
+    if (stored === 'tr' || stored === 'en') return stored;
+  } catch (e) {}
+  return navigator.language.startsWith('tr') ? 'tr' : 'en';
+}
+
+let currentLang = getInitialLang();
 
 function applyLang(lang) {
   currentLang = lang;
+  try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
   document.documentElement.lang = lang;
   document.getElementById('langToggle').textContent = lang === 'tr' ? 'EN' : 'TR';
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
     if (translations[lang][key]) el.textContent = translations[lang][key];
   });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const key = el.getAttribute('data-i18n-html');
+    if (translations[lang][key]) el.innerHTML = translations[lang][key];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    if (translations[lang][key]) el.setAttribute('placeholder', translations[lang][key]);
+  });
+  document.querySelectorAll('[data-i18n-alt]').forEach(el => {
+    const key = el.getAttribute('data-i18n-alt');
+    if (translations[lang][key]) el.setAttribute('alt', translations[lang][key]);
+  });
+  document.querySelectorAll('[data-i18n-err]').forEach(el => {
+    const key = el.getAttribute('data-i18n-err');
+    if (key === 'invalid_password' && translations[lang]['portal.error_invalid']) {
+      el.textContent = translations[lang]['portal.error_invalid'];
+    }
+  });
   // Update page title
-  document.title = lang === 'tr' ? 'İDİGNA | FRC Takım 9502' : 'İDİGNA | FRC Team 9502';
+  document.title = lang === 'tr' ? 'İDİGNA | FRC Takımı 9502' : 'İDİGNA | FRC Team 9502';
 }
 
 document.getElementById('langToggle').addEventListener('click', () => {
@@ -881,6 +927,12 @@ document.getElementById('langToggle').addEventListener('click', () => {
 });
 
 applyLang(currentLang);
+
+window.addEventListener('storage', (e) => {
+  if (e.key === LANG_KEY && (e.newValue === 'tr' || e.newValue === 'en')) {
+    applyLang(e.newValue);
+  }
+});
 
 // ─── Scroll animations ───
 const observer = new IntersectionObserver(entries => {

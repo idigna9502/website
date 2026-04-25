@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtualenvs
+.venv/
+venv/
+ENV/
+
+# Environment / secrets
+.env
+.env.*
+
+# IDEs
+.idea/
+.vscode/
+
+# OS
+Thumbs.db
+Desktop.ini
+
+# SQLite databases
+*.sqlite3
+*.db
+
+# Uploads (keep folders, ignore contents)
+idigna/static/uploads/**
+!idigna/static/uploads/
+!idigna/static/uploads/logos/
+!idigna/static/uploads/.gitkeep
+!idigna/static/uploads/logos/.gitkeep
+
+# Gunicorn / logs
+*.log
