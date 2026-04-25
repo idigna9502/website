@@ -143,7 +143,20 @@ nav{
 }
 .hero-cta{
   position:relative;
-  display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;
+  display:flex;
+  flex-direction:column;
+  gap:0.9rem;
+  align-items:center;
+}
+.hero-cta-main{
+  display:flex;
+  gap:1rem;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.hero-cta-extra{
+  display:flex;
+  justify-content:center;
 }
 .btn-primary{
   background:var(--cyan);color:var(--navy);
@@ -523,8 +536,13 @@ footer span{color:var(--cyan)}
   <p class="hero-number">TEAM · 9502 · TED DİYARBAKIR KOLEJİ</p>
   <p class="hero-tagline" data-i18n="hero.tagline">"Köklerimizden Gücümüzü Alır, Yeniden Yükseliriz."</p>
   <div class="hero-cta">
-    <a href="#about" class="btn-primary" data-i18n="hero.cta1">Bizi Keşfet</a>
-    <a href="#sponsors" class="btn-secondary" data-i18n="hero.cta2">Sponsor Ol</a>
+    <div class="hero-cta-main">
+      <a href="#about" class="btn-primary" data-i18n="hero.cta1">Bizi Keşfet</a>
+      <a href="#sponsors" class="btn-secondary" data-i18n="hero.cta2">Sponsor Ol</a>
+    </div>
+    <div class="hero-cta-extra">
+      <button type="button" class="sponsor-portal-btn" onclick="openSponsorModal()" data-i18n-html="sponsors.portal_btn">Special to our sponsors</button>
+    </div>
   </div>
 </section>
 
